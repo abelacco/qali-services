@@ -1,26 +1,76 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, mongo } from 'mongoose';
+import { Patient } from './entities/patient.entity';
+import { mongoExceptionHandler } from 'src/common/mongoExceptionHandler';
 
 @Injectable()
 export class PatientService {
-  create(createPatientDto: CreatePatientDto) {
-    return 'This action adds a new patient';
+  constructor(
+    @InjectModel(Patient.name) private readonly _patientModel: Model<Patient>,
+  ) {}
+
+  async create(createPatientDto: CreatePatientDto): Promise<Patient> {
+    try {
+      const createPatient = new this._patientModel(createPatientDto);
+      await createPatient.save();
+      return createPatient;
+    } catch (error) {
+      if(error instanceof mongo.MongoError)
+        mongoExceptionHandler(error);
+      else throw error;
+    }
   }
 
-  findAll() {
-    return `This action returns all patient`;
+  async findAll(): Promise<Array<Patient>> {
+    try {
+      const results = await this._patientModel.find();
+      if (!results) throw new NotFoundException('Could not find any patients');
+      return results;
+    } catch (error) {
+      if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
+      else throw error;
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} patient`;
+  async findOne(id: string): Promise<Patient> {
+    try {
+      const patient = await this._patientModel.findById(id);
+      if (!patient) throw new NotFoundException('Patient not found');
+      return patient;
+    } catch (error) {
+      if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
+      else throw error;
+    }
   }
 
-  update(id: number, updatePatientDto: UpdatePatientDto) {
-    return `This action updates a #${id} patient`;
+  async update(
+    id: string,
+    updatePatientDto: UpdatePatientDto,
+  ): Promise<string> {
+    try {
+      const patient = await this._patientModel.findByIdAndUpdate(
+        id,
+        updatePatientDto,
+      );
+      if (!patient) throw new NotFoundException('Patient not found');
+      return `Patient ${patient.id} updated successfully`;
+    } catch (error) {
+      if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
+      else throw error;
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} patient`;
+  async remove(id: string): Promise<string> {
+    try {
+      const patient = await this._patientModel.findByIdAndDelete(id);
+      if (!patient) throw new NotFoundException('Patient not found');
+      return `Patient ${patient.id} deleted successfully`;
+    } catch (error) {
+      if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
+      else throw error;
+    }
   }
 }
