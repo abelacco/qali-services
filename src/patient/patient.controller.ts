@@ -9,17 +9,17 @@ export class PatientController {
 
   @Post()
   create(@Body() createPatientDto: CreatePatientDto) {
-    return this.patientService.create(createPatientDto);
+    return this.patientService.addOne(createPatientDto);
   }
 
   @Get()
   findAll() {
-    return this.patientService.findAll();
+    return this.patientService.getAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.patientService.findOne(id);
+    return this.patientService.getById(id);
   }
 
   @Patch(':id')
