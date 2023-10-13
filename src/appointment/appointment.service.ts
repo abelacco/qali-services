@@ -1,60 +1,59 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { IAppointmentDao } from './db/appointmentDao';
+import { MongoDbService } from './db/mongodb.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
-import { UpdateAppointmentDto } from './dto/update-appointment.dto';
-import { InjectModel } from '@nestjs/mongoose';
 import { Appointment } from './entities/appointment.entity';
-import { Model } from 'mongoose';
+import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 
 @Injectable()
 export class AppointmentService {
+  private readonly _db: IAppointmentDao
   constructor(
-    @InjectModel(Appointment.name)
-    private readonly _appointmentModel: Model<Appointment>,
-  ) {}
+    readonly _mongoDbService: MongoDbService,
+  ) {
+    this._db = _mongoDbService
+  }
 
-  async create(
-    createAppointmentDto: CreateAppointmentDto,
-  ): Promise<Appointment> {
+  async addOne(createAppointmentDto: CreateAppointmentDto): Promise<Appointment> {
     try {
-      const appointment = new this._appointmentModel(createAppointmentDto);
-      await appointment.save();
+      const createAppointment = this._db.create(createAppointmentDto);
+      return createAppointment;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getAll(): Promise<Array<Appointment>> {
+    try {
+      const results = await this._db.findAll();
+      if (!results) throw new NotFoundException('Could not find any appointment');
+      return results;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getById(id: string): Promise<Appointment> {
+    try {
+      const appointment = await this._db.findById(id);
+      if (!appointment) throw new NotFoundException('Appointment not found');
       return appointment;
     } catch (error) {
       throw error;
     }
   }
 
-  async findAll(): Promise<Array<Appointment>> {
+  async update(
+    id: string,
+    updateAppointmentDto: UpdateAppointmentDto,
+  ): Promise<string> {
     try {
-      const result = await this._appointmentModel.find();
-
-      if (!result) throw new NotFoundException();
-
-      return result;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async findOne(id: string): Promise<Appointment> {
-    try {
-      const result = await this._appointmentModel.findById(id);
-      if (!result) throw new NotFoundException();
-      return result;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async update(id: string, updateAppointmentDto: UpdateAppointmentDto): Promise<string> {
-    try {
-      const result = await this._appointmentModel.findByIdAndUpdate(
+      const appointment = await this._db.update(
         id,
         updateAppointmentDto,
       );
-      if (!result) throw new NotFoundException();
-
-      return `Appointment ${result.id} updated successfully`;
+      if (!appointment) throw new NotFoundException('Appointment not found');
+      return `Appointment ${appointment.id} updated successfully`;
     } catch (error) {
       throw error;
     }
@@ -62,10 +61,9 @@ export class AppointmentService {
 
   async remove(id: string): Promise<string> {
     try {
-      const result = await this._appointmentModel.findByIdAndDelete(id);
-      if (!result) throw new NotFoundException();
-
-      return `Appointment ${result.id} deleted successfully`;
+      const appointment = await this._db.remove(id);
+      if (!appointment) throw new NotFoundException('Appointment not found');
+      return `Appointment ${appointment.id} deleted successfully`;
     } catch (error) {
       throw error;
     }

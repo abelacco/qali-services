@@ -9,17 +9,17 @@ export class AppointmentController {
 
   @Post()
   create(@Body() createAppointmentDto: CreateAppointmentDto) {
-    return this.appointmentService.create(createAppointmentDto);
+    return this.appointmentService.addOne(createAppointmentDto);
   }
 
   @Get()
   findAll() {
-    return this.appointmentService.findAll();
+    return this.appointmentService.getAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.appointmentService.findOne(id);
+    return this.appointmentService.getById(id);
   }
 
   @Patch(':id')

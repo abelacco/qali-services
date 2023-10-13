@@ -1,13 +1,9 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-
-enum Status {
-  PENDING = 0,
-  CONFIRMED = 1,
-  CANCELED = 2
-}
+import { Document } from "mongoose";
+import { Status } from "src/common/appointmentStatus";
 
 @Schema()
-export class Appointment {
+export class Appointment extends Document {
   @Prop({
     type: String,
   })
