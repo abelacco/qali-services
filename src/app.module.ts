@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { EnvConfiguration } from './config/app.config';
 import { JoiValidationSchema } from './config/joi.validation';
@@ -8,6 +7,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { DoctorModule } from './doctor/doctor.module';
 import { SeedModule } from './seed/seed.module';
 import { AppointmentModule } from './appointment/appointment.module';
+import { PatientModule } from './patient/patient.module';
 
 @Module({
   imports: [
@@ -19,8 +19,8 @@ import { AppointmentModule } from './appointment/appointment.module';
     DoctorModule,
     SeedModule,
     AppointmentModule,
+    PatientModule,
   ],
-  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
