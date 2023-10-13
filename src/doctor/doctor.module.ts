@@ -3,10 +3,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { DoctorService } from './doctor.service';
 import { DoctorController } from './doctor.controller';
 import { Doctor, DoctorSchema } from './entities/doctor.entity';
+import { MongoDbService } from './db/mongodb.service';
 
 @Module({
   controllers: [DoctorController],
-  providers: [DoctorService],
+  providers: [DoctorService, MongoDbService],
   imports: [
     MongooseModule.forFeature([
       {

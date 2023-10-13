@@ -9,17 +9,17 @@ export class DoctorController {
 
   @Post()
   create(@Body() createDoctorDto: CreateDoctorDto) {
-    return this.doctorService.create(createDoctorDto);
+    return this.doctorService.addOne(createDoctorDto);
   }
 
   @Get()
   findAll() {
-    return this.doctorService.findAll();
+    return this.doctorService.getAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.doctorService.findOne(id);
+    return this.doctorService.getById(id);
   }
 
   @Patch(':id')

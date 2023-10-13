@@ -1,83 +1,71 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
 import { UpdateDoctorDto } from './dto/update-doctor.dto';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, mongo } from 'mongoose';
 import { Doctor } from './entities/doctor.entity';
+import { MongoDbService } from './db/mongodb.service';
+import { IDoctorDao } from './db/doctorDao';
 
 @Injectable()
 export class DoctorService {
+  private readonly _db: IDoctorDao
   constructor(
-    @InjectModel(Doctor.name)
-    private readonly _doctorModel: Model<Doctor>,
-  ) {}
+    readonly _mongoDbService: MongoDbService,
+  ) {
+    this._db = _mongoDbService
+  }
 
-  async create(createDoctorDto: CreateDoctorDto): Promise<Doctor> {
+  async addOne(createDoctorDto: CreateDoctorDto): Promise<Doctor> {
     try {
-      const newDoctor = new this._doctorModel(createDoctorDto);
-      await newDoctor.save();
-      return newDoctor;
+      const createDoctor = this._db.create(createDoctorDto);
+      return createDoctor;
     } catch (error) {
-      if (error instanceof mongo.MongoError) this.handleExceptions(error);
-      else throw error;
+      throw error;
     }
   }
 
-  async findAll(): Promise<Array<Doctor>> {
+  async getAll(): Promise<Array<Doctor>> {
     try {
-      const result = await this._doctorModel.find();
-      if (!result) throw new NotFoundException();
-      return result;
+      const results = await this._db.findAll();
+      if (!results) throw new NotFoundException('Could not find any doctor');
+      return results;
     } catch (error) {
-      if (error instanceof mongo.MongoError) this.handleExceptions(error);
-      else throw error;
+      throw error;
     }
   }
 
-  async findOne(id: string): Promise<Doctor> {
+  async getById(id: string): Promise<Doctor> {
     try {
-      const doctor = await this._doctorModel.findById(id);
-      if (!doctor) throw new NotFoundException();
+      const doctor = await this._db.findById(id);
+      if (!doctor) throw new NotFoundException('Doctor not found');
       return doctor;
     } catch (error) {
-      if (error instanceof mongo.MongoError) this.handleExceptions(error);
-      else throw error;
+      throw error;
     }
   }
 
-  async update(id: string, updateDoctorDto: UpdateDoctorDto): Promise<string> {
+  async update(
+    id: string,
+    updateDoctorDto: UpdateDoctorDto,
+  ): Promise<string> {
     try {
-      const doctor = await this._doctorModel.findByIdAndUpdate(
+      const doctor = await this._db.update(
         id,
         updateDoctorDto,
       );
-      if (!doctor) throw new NotFoundException();
+      if (!doctor) throw new NotFoundException('Doctor not found');
       return `Doctor ${doctor.id} updated successfully`;
     } catch (error) {
-      if (error instanceof mongo.MongoError) this.handleExceptions(error);
-      else throw error;
+      throw error;
     }
   }
 
   async remove(id: string): Promise<string> {
     try {
-      const result = await this._doctorModel.findByIdAndDelete(id);
-      if (!result) throw new NotFoundException();
-      return `Doctor ${result.id} deleted successfully`;
+      const doctor = await this._db.remove(id);
+      if (!doctor) throw new NotFoundException('Doctor not found');
+      return `Doctor ${doctor.id} deleted successfully`;
     } catch (error) {
-      if (error instanceof mongo.MongoError) this.handleExceptions(error);
-      else throw error;
+      throw error;
     }
-  }
-
-  private handleExceptions(error: any) {
-    if (error.code === 11000) {
-      throw new BadRequestException(
-        'Pokemon already exists' + JSON.stringify(error.keyValue),
-      );
-    }
-    throw new InternalServerErrorException(
-      'Error creating pokemon' + JSON.stringify(error),
-    );
   }
 }
