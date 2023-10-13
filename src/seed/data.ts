@@ -1,21 +1,31 @@
 interface SeedDoctor {
-    name: string,
-    phone: string,
-    speciality: string,
-    fee: number,
+  name: string;
+  phone: string;
+  speciality: string;
+  fee: number;
 }
+
 interface SeedPatient {
   name: string;
   phone: string;
   dni: string;
 }
+
+interface SeedAppointment {
+  doctorId: string;
+  patientId: string;
+  date: string;
+  fee: number;
+  status: string;
+}
+
 interface SeedData {
-    doctor: SeedDoctor[];
-    patient: SeedPatient[];
+  doctor: SeedDoctor[];
+  patient: SeedPatient[];
+  appointment: SeedAppointment[];
 }
 
 export const initialData: SeedData = {
-
     doctor: [
         {
             name: 'Dr. John Doe',
@@ -129,5 +139,77 @@ export const initialData: SeedData = {
     phone: "222-222-2222",
     dni: "J22222222"
   }
+    ],
+    appointment: [
+      {
+        doctorId: 'D12345',
+        patientId: 'P56789',
+        date: '2023-10-12',
+        fee: 50,
+        status: '0',
+      },
+      {
+        doctorId: 'D67890',
+        patientId: 'P12345',
+        date: '2023-10-15',
+        fee: 75,
+        status: '1',
+      },
+      {
+        doctorId: 'D54321',
+        patientId: 'P98765',
+        date: '2023-10-18',
+        fee: 60,
+        status: '2',
+      },
+      {
+        doctorId: 'D23456',
+        patientId: 'P34567',
+        date: '2023-10-20',
+        fee: 80,
+        status: '1',
+      },
+      {
+        doctorId: 'D78901',
+        patientId: 'P23456',
+        date: '2023-10-25',
+        fee: 55,
+        status: '0',
+      },
+      {
+        doctorId: 'D34567',
+        patientId: 'P67890',
+        date: '2023-10-28',
+        fee: 70,
+        status: '1',
+      },
+      {
+        doctorId: 'D45678',
+        patientId: 'P78901',
+        date: '2023-11-02',
+        fee: 65,
+        status: '0',
+      },
+      {
+        doctorId: 'D89012',
+        patientId: 'P45678',
+        date: '2023-11-05',
+        fee: 90,
+        status: '1',
+      },
+      {
+        doctorId: 'D56789',
+        patientId: 'P89012',
+        date: '2023-11-08',
+        fee: 75,
+        status: '2',
+      },
+      {
+        doctorId: 'D12345',
+        patientId: 'P56789',
+        date: '2023-11-12',
+        fee: 50,
+        status: '0',
+      },
     ],
 }

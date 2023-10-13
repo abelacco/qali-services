@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { DoctorModule } from './doctor/doctor.module';
 import { SeedModule } from './seed/seed.module';
+import { AppointmentModule } from './appointment/appointment.module';
 import { PatientModule } from './patient/patient.module';
 
 @Module({
@@ -17,6 +18,7 @@ import { PatientModule } from './patient/patient.module';
     MongooseModule.forRoot(process.env.MONGODB),
     DoctorModule,
     SeedModule,
+    AppointmentModule,
     PatientModule,
   ],
   providers: [AppService],
