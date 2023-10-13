@@ -1,81 +1,156 @@
-
-
 interface SeedDoctor {
-    name: string,
-    phone: string,
-    speciality: string,
-    fee: number,
+  name: string;
+  phone: string;
+  speciality: string;
+  fee: number;
 }
 
+interface SeedAppointment {
+  doctorId: string;
+  patientId: string;
+  date: string;
+  fee: number;
+  status: string;
+}
 
 interface SeedData {
-    doctor: SeedDoctor[];
+  doctor: SeedDoctor[];
+  appointment: SeedAppointment[];
 }
-
 
 export const initialData: SeedData = {
-
-
-    doctor: [
-        {
-            name: 'Dr. John Doe',
-            phone: '123-456-7890',
-            speciality: 'Cardiologist',
-            fee: 150,
-        },
-        {
-            name: 'Dr. Jane Smith',
-            phone: '987-654-3210',
-            speciality: 'Dermatologist',
-            fee: 120,
-        },
-        {
-            name: 'Dr. Alan Turing',
-            phone: '111-222-3333',
-            speciality: 'Neurologist',
-            fee: 180,
-        },
-        {
-            name: 'Dr. Ada Lovelace',
-            phone: '444-555-6666',
-            speciality: 'Pediatrician',
-            fee: 140,
-        },
-        {
-            name: 'Dr. Grace Hopper',
-            phone: '777-888-9999',
-            speciality: 'Radiologist',
-            fee: 170,
-        },
-        {
-            name: 'Dr. Richard Feynman',
-            phone: '222-333-4444',
-            speciality: 'Physicist',
-            fee: 165,
-        },
-        {
-            name: 'Dr. Katherine Johnson',
-            phone: '555-666-7777',
-            speciality: 'Gynecologist',
-            fee: 155,
-        },
-        {
-            name: 'Dr. Carl Sagan',
-            phone: '888-999-0000',
-            speciality: 'Astronomer',
-            fee: 190,
-        },
-        {
-            name: 'Dr. Mary Jackson',
-            phone: '999-000-1111',
-            speciality: 'Endocrinologist',
-            fee: 150,
-        },
-        {
-            name: 'Dr. James Clerk Maxwell',
-            phone: '000-111-2222',
-            speciality: 'Electromagnetism',
-            fee: 160,
-        },
-    ]
-}
+  doctor: [
+    {
+      name: 'Dr. John Doe',
+      phone: '123-456-7890',
+      speciality: 'Cardiologist',
+      fee: 150,
+    },
+    {
+      name: 'Dr. Jane Smith',
+      phone: '987-654-3210',
+      speciality: 'Dermatologist',
+      fee: 120,
+    },
+    {
+      name: 'Dr. Alan Turing',
+      phone: '111-222-3333',
+      speciality: 'Neurologist',
+      fee: 180,
+    },
+    {
+      name: 'Dr. Ada Lovelace',
+      phone: '444-555-6666',
+      speciality: 'Pediatrician',
+      fee: 140,
+    },
+    {
+      name: 'Dr. Grace Hopper',
+      phone: '777-888-9999',
+      speciality: 'Radiologist',
+      fee: 170,
+    },
+    {
+      name: 'Dr. Richard Feynman',
+      phone: '222-333-4444',
+      speciality: 'Physicist',
+      fee: 165,
+    },
+    {
+      name: 'Dr. Katherine Johnson',
+      phone: '555-666-7777',
+      speciality: 'Gynecologist',
+      fee: 155,
+    },
+    {
+      name: 'Dr. Carl Sagan',
+      phone: '888-999-0000',
+      speciality: 'Astronomer',
+      fee: 190,
+    },
+    {
+      name: 'Dr. Mary Jackson',
+      phone: '999-000-1111',
+      speciality: 'Endocrinologist',
+      fee: 150,
+    },
+    {
+      name: 'Dr. James Clerk Maxwell',
+      phone: '000-111-2222',
+      speciality: 'Electromagnetism',
+      fee: 160,
+    },
+  ],
+  appointment: [
+    {
+      doctorId: 'D12345',
+      patientId: 'P56789',
+      date: '2023-10-12',
+      fee: 50,
+      status: '0',
+    },
+    {
+      doctorId: 'D67890',
+      patientId: 'P12345',
+      date: '2023-10-15',
+      fee: 75,
+      status: '1',
+    },
+    {
+      doctorId: 'D54321',
+      patientId: 'P98765',
+      date: '2023-10-18',
+      fee: 60,
+      status: '2',
+    },
+    {
+      doctorId: 'D23456',
+      patientId: 'P34567',
+      date: '2023-10-20',
+      fee: 80,
+      status: '1',
+    },
+    {
+      doctorId: 'D78901',
+      patientId: 'P23456',
+      date: '2023-10-25',
+      fee: 55,
+      status: '0',
+    },
+    {
+      doctorId: 'D34567',
+      patientId: 'P67890',
+      date: '2023-10-28',
+      fee: 70,
+      status: '1',
+    },
+    {
+      doctorId: 'D45678',
+      patientId: 'P78901',
+      date: '2023-11-02',
+      fee: 65,
+      status: '0',
+    },
+    {
+      doctorId: 'D89012',
+      patientId: 'P45678',
+      date: '2023-11-05',
+      fee: 90,
+      status: '1',
+    },
+    {
+      doctorId: 'D56789',
+      patientId: 'P89012',
+      date: '2023-11-08',
+      fee: 75,
+      status: '2',
+    },
+    {
+      doctorId: 'D12345',
+      patientId: 'P56789',
+      date: '2023-11-12',
+      fee: 50,
+      status: '0',
+    },
+  ],
+};
