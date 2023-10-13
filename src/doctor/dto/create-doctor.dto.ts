@@ -1,16 +1,19 @@
-import { IsNumber, IsString, MinLength } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export class CreateDoctorDto {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
 
-    @IsString()
-    name: string;
+  @IsString()
+  @IsNotEmpty()
+  phone: string;
 
-    @IsString()
-    phone: string;
+  @IsString()
+  @IsNotEmpty()
+  speciality: string;
 
-    @IsString()
-    speciality: string;
-
-    @IsNumber()
-    fee: number;
+  @IsNumber()
+  @IsNotEmpty()
+  fee: number;
 }
