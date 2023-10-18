@@ -1,6 +1,6 @@
-import { CreateAppointmentDto } from "../dto/create-appointment.dto";
-import { UpdateAppointmentDto } from "../dto/update-appointment.dto";
+import { CreateAppointmentDto , UpdateAppointmentDto} from "../dto";
 import { Appointment } from "../entities/appointment.entity";
+
 
 
 export interface IAppointmentDao {

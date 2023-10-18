@@ -13,4 +13,7 @@ export class CreateAppointmentDto {
 
   @IsNumber()
   fee: number;
+
+  @IsString()
+  code: number;
 }

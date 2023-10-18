@@ -26,7 +26,7 @@ export class MongoDbService implements IAppointmentDao {
 
   async findAll(): Promise<Array<Appointment>> {
     try {
-      const results = await this._appointmentModel.find();
+      const results = await this._appointmentModel.find().populate('doctorId').populate('patientId').exec();
       return results;
     } catch (error) {
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);

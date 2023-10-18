@@ -1,16 +1,19 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
 import { Status } from "src/common/appointmentStatus";
 
 @Schema()
 export class Appointment extends Document {
   @Prop({
-    type: String,
+    type: Types.ObjectId,
+    ref: 'Doctor',  // Ref doctor
+
   })
   doctorId: string;
 
   @Prop({
-    type: String,
+    type: Types.ObjectId,
+    ref: 'Patient',  // Ref Patient
   })
   patientId: string;
 
@@ -30,6 +33,11 @@ export class Appointment extends Document {
     default: 0
   })
   status: number;
+
+  @Prop({
+    type: String,
+  })
+  code: string;
 }
 
 export const AppointmentSchema = SchemaFactory.createForClass(Appointment);

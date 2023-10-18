@@ -12,11 +12,10 @@ interface SeedPatient {
 }
 
 interface SeedAppointment {
-  doctorId: string;
-  patientId: string;
   date: string;
   fee: number;
   status: string;
+  code: string;
 }
 
 interface SeedData {
@@ -29,7 +28,7 @@ export const initialData: SeedData = {
     doctor: [
         {
             name: 'Dr. John Doe',
-            phone: '123-456-7890',
+            phone: '123-456-7891',
             speciality: 'Cardiologist',
             fee: 150,
         },
@@ -142,74 +141,67 @@ export const initialData: SeedData = {
     ],
     appointment: [
       {
-        doctorId: 'D12345',
-        patientId: 'P56789',
         date: '2023-10-12',
         fee: 50,
         status: '0',
+        code: 'R1XDF'
       },
       {
-        doctorId: 'D67890',
-        patientId: 'P12345',
+
         date: '2023-10-15',
         fee: 75,
         status: '1',
+        code: 'R1LGO'
       },
       {
-        doctorId: 'D54321',
-        patientId: 'P98765',
+        
         date: '2023-10-18',
         fee: 60,
         status: '2',
+        code: 'R1TY'
       },
       {
-        doctorId: 'D23456',
-        patientId: 'P34567',
+        
         date: '2023-10-20',
         fee: 80,
         status: '1',
+        code: 'R1LO'
       },
       {
-        doctorId: 'D78901',
-        patientId: 'P23456',
         date: '2023-10-25',
         fee: 55,
         status: '0',
+        code: 'RQA1'
       },
       {
-        doctorId: 'D34567',
-        patientId: 'P67890',
         date: '2023-10-28',
         fee: 70,
         status: '1',
+        code: 'ROG1'
       },
       {
-        doctorId: 'D45678',
-        patientId: 'P78901',
         date: '2023-11-02',
         fee: 65,
         status: '0',
+        code: 'RLP1'
       },
       {
-        doctorId: 'D89012',
-        patientId: 'P45678',
         date: '2023-11-05',
         fee: 90,
         status: '1',
+        code: 'Q3R1'
       },
       {
-        doctorId: 'D56789',
-        patientId: 'P89012',
         date: '2023-11-08',
         fee: 75,
         status: '2',
+        code: 'P3R1'
       },
       {
-        doctorId: 'D12345',
-        patientId: 'P56789',
         date: '2023-11-12',
         fee: 50,
         status: '0',
+        code: 'L5R1'
       },
     ],
 }
