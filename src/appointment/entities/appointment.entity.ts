@@ -38,6 +38,11 @@ export class Appointment extends Document {
     type: String,
   })
   code: string;
+
+  @Prop({
+    type: String,
+  })
+  voucher: string;
 }
 
 export const AppointmentSchema = SchemaFactory.createForClass(Appointment);

@@ -16,6 +16,7 @@ interface SeedAppointment {
   fee: number;
   status: string;
   code: string;
+  voucher: string;
 }
 
 interface SeedData {
@@ -144,64 +145,74 @@ export const initialData: SeedData = {
         date: '2023-10-12',
         fee: 50,
         status: '0',
-        code: 'R1XDF'
+        code: 'R1XDF',
+        voucher: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1697751230/Imagen_de_WhatsApp_2023-10-16_a_las_21.03.28_10028c3a_bpdii7.jpg'
       },
       {
 
         date: '2023-10-15',
         fee: 75,
         status: '1',
-        code: 'R1LGO'
+        code: 'R1LGO',
+        voucher: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1697751230/Imagen_de_WhatsApp_2023-10-16_a_las_21.03.28_10028c3a_bpdii7.jpg'
       },
       {
         
         date: '2023-10-18',
         fee: 60,
         status: '2',
-        code: 'R1TY'
+        code: 'R1TY',
+        voucher: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1697751230/Imagen_de_WhatsApp_2023-10-16_a_las_21.03.28_10028c3a_bpdii7.jpg'
       },
       {
         
         date: '2023-10-20',
         fee: 80,
         status: '1',
-        code: 'R1LO'
+        code: 'R1LO',
+        voucher: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1697751230/Imagen_de_WhatsApp_2023-10-16_a_las_21.03.28_10028c3a_bpdii7.jpg'
       },
       {
         date: '2023-10-25',
         fee: 55,
         status: '0',
-        code: 'RQA1'
+        code: 'RQA1',
+        voucher: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1697751230/Imagen_de_WhatsApp_2023-10-16_a_las_21.03.28_10028c3a_bpdii7.jpg'
       },
       {
         date: '2023-10-28',
         fee: 70,
         status: '1',
-        code: 'ROG1'
+        code: 'ROG1',
+        voucher: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1697751230/Imagen_de_WhatsApp_2023-10-16_a_las_21.03.28_10028c3a_bpdii7.jpg'
       },
       {
         date: '2023-11-02',
         fee: 65,
         status: '0',
-        code: 'RLP1'
+        code: 'RLP1',
+        voucher: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1697751230/Imagen_de_WhatsApp_2023-10-16_a_las_21.03.28_10028c3a_bpdii7.jpg'
       },
       {
         date: '2023-11-05',
         fee: 90,
         status: '1',
-        code: 'Q3R1'
+        code: 'Q3R1',
+        voucher: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1697751230/Imagen_de_WhatsApp_2023-10-16_a_las_21.03.28_10028c3a_bpdii7.jpg'
       },
       {
         date: '2023-11-08',
         fee: 75,
         status: '2',
-        code: 'P3R1'
+        code: 'P3R1',
+        voucher: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1697751230/Imagen_de_WhatsApp_2023-10-16_a_las_21.03.28_10028c3a_bpdii7.jpg'
       },
       {
         date: '2023-11-12',
         fee: 50,
         status: '0',
-        code: 'L5R1'
+        code: 'L5R1',
+        voucher: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1697751230/Imagen_de_WhatsApp_2023-10-16_a_las_21.03.28_10028c3a_bpdii7.jpg'
       },
     ],
 }
