@@ -46,14 +46,16 @@ export class AppointmentService {
   async update(
     id: string,
     updateAppointmentDto: UpdateAppointmentDto,
-  ): Promise<string> {
+  ): Promise<any> {
     try {
       const appointment = await this._db.update(
         id,
         updateAppointmentDto,
       );
       if (!appointment) throw new NotFoundException('Appointment not found');
-      return `Appointment ${appointment.id} updated successfully`;
+      let message = `Appointment ${appointment.id} updated successfully`
+    
+      return  appointment
     } catch (error) {
       throw error;
     }
