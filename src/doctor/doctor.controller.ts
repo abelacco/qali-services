@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { DoctorService } from './doctor.service';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
 import { UpdateDoctorDto } from './dto/update-doctor.dto';
+import { FindDoctorDto } from './dto/find-doctor.dto';
 
 @Controller('doctor')
 export class DoctorController {
@@ -13,8 +14,8 @@ export class DoctorController {
   }
 
   @Get()
-  findAll() {
-    return this.doctorService.getAll();
+  findAll(@Query() props?: FindDoctorDto) {
+    return this.doctorService.getAll(props);
   }
 
   @Get(':id')

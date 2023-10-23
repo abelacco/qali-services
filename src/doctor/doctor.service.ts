@@ -4,6 +4,7 @@ import { UpdateDoctorDto } from './dto/update-doctor.dto';
 import { Doctor } from './entities/doctor.entity';
 import { MongoDbService } from './db/mongodb.service';
 import { IDoctorDao } from './db/doctorDao';
+import { FindDoctorDto } from './dto/find-doctor.dto';
 
 @Injectable()
 export class DoctorService {
@@ -23,9 +24,9 @@ export class DoctorService {
     }
   }
 
-  async getAll(): Promise<Array<Doctor>> {
+  async getAll(props?: FindDoctorDto): Promise<Array<Doctor>> {
     try {
-      const results = await this._db.findAll();
+      const results = await this._db.findAll(props);
       if (!results) throw new NotFoundException('Could not find any doctor');
       return results;
     } catch (error) {
