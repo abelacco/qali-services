@@ -29,8 +29,8 @@ export class CloudinaryController {
   @Post('uploadbuffer')
   async uploadImageToCloudinary(
     @Body('imageBuffer') imageBuffer: Buffer,
-    @Body('mimeType') mimeType: string
   ) {
+    console.log('imageBuffer', imageBuffer);
     // Aquí, asumo que tu CloudinaryService tiene un método llamado 'uploadImage'
     // que toma un buffer y un tipo MIME y devuelve la URL de la imagen subida.
     const uploadedImageUrl = await this.cloudinaryService.uploadFile2(imageBuffer);
