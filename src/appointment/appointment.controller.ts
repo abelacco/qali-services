@@ -27,6 +27,11 @@ export class AppointmentController {
     return this.appointmentService.update(id, updateAppointmentDto);
   }
 
+  @Patch('update/status/:id')
+  updateStatus(@Param('id') id: string, @Body() updateAppointmentDto: UpdateAppointmentDto) {
+    return this.appointmentService.updateAndConfirmPayment(id, updateAppointmentDto);
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.appointmentService.remove(id);

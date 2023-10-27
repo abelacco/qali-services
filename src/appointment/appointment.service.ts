@@ -4,12 +4,15 @@ import { MongoDbService } from './db/mongodb.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { Appointment } from './entities/appointment.entity';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
+import { Status } from 'src/common/appointmentStatus';
+import { NotificationService } from 'src/notification/notification.service';
 
 @Injectable()
 export class AppointmentService {
   private readonly _db: IAppointmentDao
   constructor(
     readonly _mongoDbService: MongoDbService,
+    private readonly noficationService: NotificationService
   ) {
     this._db = _mongoDbService
   }
@@ -66,6 +69,23 @@ export class AppointmentService {
       const appointment = await this._db.remove(id);
       if (!appointment) throw new NotFoundException('Appointment not found');
       return `Appointment ${appointment.id} deleted successfully`;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async updateAndConfirmPayment(
+      id: string,
+      updateAppointmentDto: UpdateAppointmentDto,) {
+    try {
+        await this.update(id, updateAppointmentDto)
+        let createNotificationDto = {
+            status: updateAppointmentDto.status,
+            id: id
+        }
+        if(updateAppointmentDto.status === Status.CONFIRMED || updateAppointmentDto.status === Status.CANCELED){
+            this.noficationService.confirmPayment(createNotificationDto)
+        }
     } catch (error) {
       throw error;
     }
