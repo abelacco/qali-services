@@ -8,6 +8,7 @@ import { DoctorModule } from './doctor/doctor.module';
 import { SeedModule } from './seed/seed.module';
 import { AppointmentModule } from './appointment/appointment.module';
 import { PatientModule } from './patient/patient.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { PatientModule } from './patient/patient.module';
     SeedModule,
     AppointmentModule,
     PatientModule,
+    CloudinaryModule,
   ],
   providers: [AppService],
 })
