@@ -1,4 +1,5 @@
 import { CreateDoctorDto } from "../dto/create-doctor.dto";
+import { FindDoctorDto } from "../dto/find-doctor.dto";
 import { UpdateDoctorDto } from "../dto/update-doctor.dto";
 import { Doctor } from "../entities/doctor.entity";
 
@@ -6,7 +7,7 @@ import { Doctor } from "../entities/doctor.entity";
 export interface IDoctorDao {
   create(createDoctoDto: CreateDoctorDto): Promise<Doctor>;
 
-  findAll(): Promise<Array<Doctor>>;
+  findAll(props?: FindDoctorDto): Promise<Array<Doctor>>;
 
   findById(id: string): Promise<Doctor>;
 

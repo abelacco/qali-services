@@ -6,6 +6,7 @@ import { mongoExceptionHandler } from "src/common/mongoExceptionHandler";
 import { Doctor } from "../entities/doctor.entity";
 import { CreateDoctorDto } from "../dto/create-doctor.dto";
 import { UpdateDoctorDto } from "../dto/update-doctor.dto";
+import { FindDoctorDto } from "../dto/find-doctor.dto";
 
 @Injectable()
 export class MongoDbService implements IDoctorDao {
@@ -24,9 +25,9 @@ export class MongoDbService implements IDoctorDao {
     }
   }
 
-  async findAll(): Promise<Array<Doctor>> {
+  async findAll(props?: FindDoctorDto): Promise<Array<Doctor>> {
     try {
-      const results = await this._doctorModel.find();
+      const results = await this._doctorModel.find(props);
       return results;
     } catch (error) {
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
