@@ -39,7 +39,6 @@ export class PatientService {
 
   async getById(id: string): Promise<Patient> {
     try {
-      console.log('getById')
       const patient = await this._db.findById(id);
       if (!patient) throw new NotFoundException('Patient not found');
       return patient;
@@ -50,7 +49,6 @@ export class PatientService {
 
   async getByPhone(phone: string): Promise<Patient> {
     try {
-      console.log('getByPhone')
       const patient = await this._db.findByPhone(phone);
       if (!patient) throw new NotFoundException('Patient not found');
       return patient;
@@ -86,16 +84,12 @@ export class PatientService {
   }
 
   async findOrCreatePatient(findCreatePatientDto: findCreatePatientDto): Promise<Patient> {
-    console.log('Services');
     let phone = findCreatePatientDto.phone
     let patient:Patient
     try {
       patient = await this._db.findByPhone(phone);
-      console.log("patient despues de buscar",patient)
       if(!patient) {
-        console.log("crar patiend")
         patient = await this._db.create(findCreatePatientDto);
-        console.log("patientcreado", patient)
       }
       return patient;
     } catch (error) {

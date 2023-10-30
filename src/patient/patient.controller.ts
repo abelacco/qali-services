@@ -17,9 +17,10 @@ export class PatientController {
     return this.patientService.getAll();
   }
 
+
+
   @Get('findorcreate')
   findOrCreate(@Query() findCreatePatientDto: findCreatePatientDto) {
-    console.log('Controller findOrCreate');
     const patient = this.patientService.findOrCreatePatient(findCreatePatientDto);
     return patient;
   }
