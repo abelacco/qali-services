@@ -14,8 +14,9 @@ export class CreateAppointmentDto {
   @IsNumber()
   fee: number;
 
+  @IsOptional()
   @IsString()
-  code: number;
+  code?: number;
 
   @IsOptional()
   voucher?: string;
