@@ -15,8 +15,8 @@ export class Patient extends Document {
   phone: string;
 
   @Prop({
-    unique: true,
-    type: String
+    type: String,
+    required: false, 
   })
   dni: string;
 }

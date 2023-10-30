@@ -19,6 +19,7 @@ export class MongoDbService implements IPatientDao {
       await createPatient.save();
       return createPatient;
     } catch (error) {
+      console.log('error', error)
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
       else throw error;
     }
@@ -37,6 +38,18 @@ export class MongoDbService implements IPatientDao {
   async findById(id: string): Promise<Patient> {
     try {
       const patient = await this._patientModel.findById(id);
+      return patient;
+    } catch (error) {
+      if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
+      else throw error;
+    }
+  }
+
+  async findByPhone(phone: string): Promise<Patient> {
+    console.log('db by phone', phone)
+    try {
+      const patient = await this._patientModel.findOne({ phone: phone });
+      console.log('patient encontrado en dao', patient)
       return patient;
     } catch (error) {
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);

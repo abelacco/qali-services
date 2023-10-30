@@ -7,6 +7,7 @@ import { Patient } from './entities/patient.entity';
 import { mongoExceptionHandler } from 'src/common/mongoExceptionHandler';
 import { MongoDbService } from './db/mongodb.service';
 import { IPatientDao } from './db/patientDao';
+import { findCreatePatientDto } from './dto';
 
 @Injectable()
 export class PatientService {
@@ -38,7 +39,19 @@ export class PatientService {
 
   async getById(id: string): Promise<Patient> {
     try {
+      console.log('getById')
       const patient = await this._db.findById(id);
+      if (!patient) throw new NotFoundException('Patient not found');
+      return patient;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getByPhone(phone: string): Promise<Patient> {
+    try {
+      console.log('getByPhone')
+      const patient = await this._db.findByPhone(phone);
       if (!patient) throw new NotFoundException('Patient not found');
       return patient;
     } catch (error) {
@@ -67,6 +80,24 @@ export class PatientService {
       const patient = await this._db.remove(id);
       if (!patient) throw new NotFoundException('Patient not found');
       return `Patient ${patient.id} deleted successfully`;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findOrCreatePatient(findCreatePatientDto: findCreatePatientDto): Promise<Patient> {
+    console.log('Services');
+    let phone = findCreatePatientDto.phone
+    let patient:Patient
+    try {
+      patient = await this._db.findByPhone(phone);
+      console.log("patient despues de buscar",patient)
+      if(!patient) {
+        console.log("crar patiend")
+        patient = await this._db.create(findCreatePatientDto);
+        console.log("patientcreado", patient)
+      }
+      return patient;
     } catch (error) {
       throw error;
     }

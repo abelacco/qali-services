@@ -8,7 +8,6 @@ interface SeedDoctor {
 interface SeedPatient {
   name: string;
   phone: string;
-  dni: string;
 }
 
 interface SeedAppointment {
@@ -92,52 +91,42 @@ export const initialData: SeedData = {
   {
     name: "Paciente 1",
     phone: "125-456-7890",
-    dni: "A12345678"
   },
   {
     name: "Paciente 2",
     phone: "988-654-3210",
-    dni: "B87654321"
   },
   {
     name: "Paciente 3",
     phone: "535-555-5555",
-    dni: "C99999999"
   },
   {
     name: "Paciente 4",
     phone: "171-222-3333",
-    dni: "D11112222"
   },
   {
     name: "Paciente 5",
     phone: "999-888-7747",
-    dni: "E99988877"
   },
   {
     name: "Paciente 6",
     phone: "333-333-4333",
-    dni: "F33333333"
   },
   {
     name: "Paciente 7",
     phone: "777-777-7777",
-    dni: "G77777777"
   },
   {
     name: "Paciente 8",
     phone: "444-444-4444",
-    dni: "H44444444"
   },
   {
     name: "Paciente 9",
     phone: "666-666-6666",
-    dni: "I66666666"
   },
   {
     name: "Paciente 10",
     phone: "222-222-2222",
-    dni: "J22222222"
   }
     ],
     appointment: [

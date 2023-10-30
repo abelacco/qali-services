@@ -10,7 +10,6 @@ export class CreatePatientDto {
   phone: string;
 
   @IsString()
-  @IsNotEmpty()
   @IsOptional()
-  dni: string;
+  dni?: string;
 }
