@@ -14,7 +14,8 @@ export class NotificationService {
   async confirmPayment(createNotificationDto: CreateNotificationDto) {
     const wspServicesUrl = this.configService.get<string>('WSP_SERVICES_DEPLOY');
     console.log(wspServicesUrl);
-    const response = await axios.post(wspServicesUrl, createNotificationDto);
+    const response = await axios.post(`${wspServicesUrl}/paymentStatus`, createNotificationDto);
+    console.log(response);
     return response;
   }
 

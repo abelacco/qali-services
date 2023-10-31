@@ -78,14 +78,17 @@ export class AppointmentService {
   async updateAndConfirmPayment(
       id: string,
       updateAppointmentDto: UpdateAppointmentDto,) {
+        console.log('updateAndConfirmPayment')
     try {
         await this.update(id, updateAppointmentDto)
         let createNotificationDto = {
             status: updateAppointmentDto.status,
             id: id
         }
+        console.log(updateAppointmentDto)
         if(updateAppointmentDto.status === Status.CONFIRMED || updateAppointmentDto.status === Status.CANCELED){
-            this.noficationService.confirmPayment(createNotificationDto)
+          console.log('confirm payment')  
+          this.noficationService.confirmPayment(createNotificationDto)
         }
     } catch (error) {
       throw error;
