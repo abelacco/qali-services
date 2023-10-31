@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -91,6 +91,7 @@ export class PatientService {
       if(!patient) {
         patient = await this._db.create(findCreatePatientDto);
       }
+      Logger.log('patient', patient)
       return patient;
     } catch (error) {
       throw error;

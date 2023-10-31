@@ -46,10 +46,8 @@ export class MongoDbService implements IPatientDao {
   }
 
   async findByPhone(phone: string): Promise<Patient> {
-    console.log('db by phone', phone)
     try {
       const patient = await this._patientModel.findOne({ phone: phone });
-      console.log('patient encontrado en dao', patient)
       return patient;
     } catch (error) {
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
