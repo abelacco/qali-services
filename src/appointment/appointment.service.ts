@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { IAppointmentDao } from './db/appointmentDao';
 import { MongoDbService } from './db/mongodb.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
@@ -18,6 +18,7 @@ export class AppointmentService {
   }
 
   async addOne(createAppointmentDto: CreateAppointmentDto): Promise<Appointment> {
+    Logger.log(JSON.stringify(createAppointmentDto));
     try {
       const createAppointment = this._db.create(createAppointmentDto);
       return createAppointment;
