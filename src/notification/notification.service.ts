@@ -14,7 +14,7 @@ export class NotificationService {
   async confirmPayment(createNotificationDto: CreateNotificationDto) {
     const wspServicesUrl = this.configService.get<string>('WSP_SERVICES_DEPLOY');
     console.log(wspServicesUrl);
-    const response = await axios.post(`https://qali-wsp-services-production.up.railway.app/api/v1/wsp/paymentStatus`, createNotificationDto);
+    const response = await axios.post(`${wspServicesUrl}/paymentStatus`, createNotificationDto);
     console.log(response);
     return response;
   }
