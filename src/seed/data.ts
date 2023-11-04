@@ -141,7 +141,7 @@ export const initialData: SeedData = {
 
         date: '2023-10-15',
         fee: 75,
-        status: '1',
+        status: '0',
         code: 'R1LGO',
         voucher: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1697751230/Imagen_de_WhatsApp_2023-10-16_a_las_21.03.28_10028c3a_bpdii7.jpg'
       },
@@ -157,7 +157,7 @@ export const initialData: SeedData = {
         
         date: '2023-10-20',
         fee: 80,
-        status: '1',
+        status: '0',
         code: 'R1LO',
         voucher: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1697751230/Imagen_de_WhatsApp_2023-10-16_a_las_21.03.28_10028c3a_bpdii7.jpg'
       },
@@ -171,7 +171,7 @@ export const initialData: SeedData = {
       {
         date: '2023-10-28',
         fee: 70,
-        status: '1',
+        status: '0',
         code: 'ROG1',
         voucher: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1697751230/Imagen_de_WhatsApp_2023-10-16_a_las_21.03.28_10028c3a_bpdii7.jpg'
       },
@@ -185,7 +185,7 @@ export const initialData: SeedData = {
       {
         date: '2023-11-05',
         fee: 90,
-        status: '1',
+        status: '0',
         code: 'Q3R1',
         voucher: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1697751230/Imagen_de_WhatsApp_2023-10-16_a_las_21.03.28_10028c3a_bpdii7.jpg'
       },
@@ -199,7 +199,7 @@ export const initialData: SeedData = {
       {
         date: '2023-11-12',
         fee: 50,
-        status: '0',
+        status: '3',
         code: 'L5R1',
         voucher: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1697751230/Imagen_de_WhatsApp_2023-10-16_a_las_21.03.28_10028c3a_bpdii7.jpg'
       },

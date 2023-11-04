@@ -1,6 +1,6 @@
 export enum Status {
-    IN_PROCESS = 0,
-    PENDING = 1,
+    PENDING = 0,
+    WAITING = 1,
     CONFIRMED = 2,
     CANCELED = 3,
 }
