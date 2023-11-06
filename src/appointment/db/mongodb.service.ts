@@ -36,7 +36,10 @@ export class MongoDbService implements IAppointmentDao {
 
   async findById(id: string): Promise<Appointment> {
     try {
-      const appointment = await this._appointmentModel.findById(id);
+      const appointment = await this._appointmentModel.findById(id)
+      .populate('doctorId')
+      .populate('patientId')
+      .exec()
       return appointment;
     } catch (error) {
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
