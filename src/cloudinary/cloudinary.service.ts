@@ -9,8 +9,9 @@ import axios from 'axios';
 export class CloudinaryService {
 
   async uploadFromURL(imageUrl: string): Promise<CloudinaryResponse> {
+    const whatsAppToken = process.env.CURRENT_ACCESS_TOKEN;
     // Descargar la imagen de la URL
-    const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+    const response = await axios.get(imageUrl, { responseType: 'arraybuffer' , headers: { Authorization: `Bearer ${whatsAppToken}` }  });
     const imageBuffer = Buffer.from(response.data, 'binary');
 
     // Subir el buffer a Cloudinary
