@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Query } from "@nestjs/common";
 import { IAppointmentDao } from "./appointmentDao";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, mongo } from "mongoose";
@@ -6,12 +6,15 @@ import { mongoExceptionHandler } from "src/common/mongoExceptionHandler";
 import { Appointment } from "../entities/appointment.entity";
 import { UpdateAppointmentDto } from "../dto/update-appointment.dto";
 import { CreateAppointmentDto } from "../dto/create-appointment.dto";
+import { PaginationDto } from "src/common/pagination.dto";
+
+
 
 @Injectable()
 export class MongoDbService implements IAppointmentDao {
   constructor(
     @InjectModel(Appointment.name) private readonly _appointmentModel: Model<Appointment>,
-  ) {}
+  ) { }
 
   async create(createAppointmentDto: CreateAppointmentDto): Promise<Appointment> {
     try {
@@ -24,9 +27,18 @@ export class MongoDbService implements IAppointmentDao {
     }
   }
 
-  async findAll(): Promise<Array<Appointment>> {
+  async findAll(paginationDto?: PaginationDto): Promise<Array<Appointment>> {
     try {
-      const results = await this._appointmentModel.find().populate('doctorId').populate('patientId').exec();
+      let { offset = 0, limit = 10 } = paginationDto;
+
+      const results = await this._appointmentModel
+        .find()
+        .skip(offset)
+        .limit(limit)
+        .populate('doctorId')
+        .populate('patientId')
+        .exec();
+
       return results;
     } catch (error) {
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);

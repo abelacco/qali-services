@@ -1,3 +1,4 @@
+import { PaginationDto } from "src/common/pagination.dto";
 import { CreateAppointmentDto , UpdateAppointmentDto} from "../dto";
 import { Appointment } from "../entities/appointment.entity";
 
@@ -6,7 +7,7 @@ import { Appointment } from "../entities/appointment.entity";
 export interface IAppointmentDao {
   create(createAppointmentDto: CreateAppointmentDto): Promise<Appointment>;
 
-  findAll(): Promise<Array<Appointment>>;
+  findAll( paginationDto: PaginationDto ): Promise<Array<Appointment>>;
 
   findById(id: string): Promise<Appointment>;
 

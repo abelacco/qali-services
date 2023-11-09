@@ -6,6 +6,9 @@ import { Appointment } from './entities/appointment.entity';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 import { Status } from 'src/common/appointmentStatus';
 import { NotificationService } from 'src/notification/notification.service';
+import { PaginationDto } from 'src/common/pagination.dto';
+
+
 
 @Injectable()
 export class AppointmentService {
@@ -27,9 +30,9 @@ export class AppointmentService {
     }
   }
 
-  async getAll(): Promise<Array<Appointment>> {
+  async getAll( paginationDto?: PaginationDto ): Promise<Array<Appointment>> {
     try {
-      const results = await this._db.findAll();
+      const results = await this._db.findAll(paginationDto);
       if (!results) throw new NotFoundException('Could not find any appointment');
       return results;
     } catch (error) {
