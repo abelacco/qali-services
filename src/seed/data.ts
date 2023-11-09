@@ -27,9 +27,9 @@ interface SeedData {
 export const initialData: SeedData = {
     doctor: [
         {
-            name: 'Dr. John Doe',
-            phone: '123-456-7891',
-            speciality: 'Cardiologist',
+            name: 'Dr. Abel',
+            phone: '51947308823',
+            speciality: 'Nutrición',
             fee: 150,
         },
         {
