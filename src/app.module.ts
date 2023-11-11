@@ -10,12 +10,14 @@ import { AppointmentModule } from './appointment/appointment.module';
 import { PatientModule } from './patient/patient.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { NotificationModule } from './notification/notification.module';
+import { ApiPeruModule } from './api-peru/api-peru.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       load:[EnvConfiguration],
-      validationSchema: JoiValidationSchema
+      validationSchema: JoiValidationSchema,
+      isGlobal: true,
     }),
     MongooseModule.forRoot(process.env.MONGODB),
     DoctorModule,
@@ -24,6 +26,7 @@ import { NotificationModule } from './notification/notification.module';
     PatientModule,
     CloudinaryModule,
     NotificationModule,
+    ApiPeruModule,
   ],
   providers: [AppService],
 })

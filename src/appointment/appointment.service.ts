@@ -4,7 +4,7 @@ import { MongoDbService } from './db/mongodb.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { Appointment } from './entities/appointment.entity';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
-import { Status } from 'src/common/appointmentStatus';
+import { Status } from 'src/common/constants';
 import { NotificationService } from 'src/notification/notification.service';
 
 @Injectable()

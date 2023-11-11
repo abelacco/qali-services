@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from "mongoose";
-import { Status } from "src/common/appointmentStatus";
+import { Status } from "src/common/constants";
 
 @Schema()
 export class Appointment extends Document {
