@@ -11,6 +11,7 @@ import { PatientModule } from './patient/patient.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { NotificationModule } from './notification/notification.module';
 import { StoreModule } from './store/store.module';
+import { AfilliateModule } from './afilliate/afilliate.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { StoreModule } from './store/store.module';
     CloudinaryModule,
     NotificationModule,
     StoreModule,
+    AfilliateModule,
   ],
   providers: [AppService],
 })
