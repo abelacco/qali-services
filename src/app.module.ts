@@ -10,8 +10,9 @@ import { AppointmentModule } from './appointment/appointment.module';
 import { PatientModule } from './patient/patient.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { NotificationModule } from './notification/notification.module';
-import { ApiPeruModule } from './api-peru/api-peru.module';
 import { AffiliateModule } from './affiliate/affiliate.module';
+import { StoreModule } from './store/store.module';
+import { ApiPeruModule } from './api-peru/api-peru.module';
 
 @Module({
   imports: [
@@ -27,8 +28,9 @@ import { AffiliateModule } from './affiliate/affiliate.module';
     PatientModule,
     CloudinaryModule,
     NotificationModule,
-    ApiPeruModule,
+    StoreModule,
     AffiliateModule,
+    ApiPeruModule,
   ],
   providers: [AppService],
 })
