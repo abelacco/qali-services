@@ -1,5 +1,5 @@
 import { IsEnum, IsIn, IsString } from "class-validator";
-import { Status } from "src/common/appointmentStatus";
+import { Status } from "src/common/constants";
 
 export class CreateNotificationDto {
 
