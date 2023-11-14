@@ -26,7 +26,7 @@ interface SeedStore {
   codeQr: string;
   lat: string;
   long: string;
-  affiliater: string;
+  affiliateId: string;
   isActive: boolean;
 }
 
@@ -47,7 +47,7 @@ export const initialData: SeedData = {
       codeQr: 'a7sd7asd8as',
       lat: '2323',
       long: '787878',
-      affiliater: '111111111',
+      affiliateId: '6553b5baaa22f773e33268b2',
       isActive: true,
     },
     {
@@ -58,7 +58,7 @@ export const initialData: SeedData = {
       codeQr: 'a7sd7asd8as',
       lat: '2323',
       long: '787878',
-      affiliater: '111111111',
+      affiliateId: '6553b686b911bf98dd43fa3e',
       isActive: true,
     },
     {
@@ -69,7 +69,7 @@ export const initialData: SeedData = {
       codeQr: 'a7sd7asd8as',
       lat: '2323',
       long: '787878',
-      affiliater: '22456785',
+      affiliateId: '6553d4f20d37014afb4cb0c3',
       isActive: true,
     },
   ],
