@@ -4,7 +4,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateStoreDto, UpdateStoreDto } from './dto';
+import { CreateStoreDto, FilterStoreDto, UpdateStoreDto } from './dto';
 import { Store } from './entities/store.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, isValidObjectId } from 'mongoose';
@@ -29,6 +29,31 @@ export class StoreService {
   async findAll(paginationDto: PaginationDto): Promise<Store[]> {
     const { limit = 20, offset = 0 } = paginationDto;
     return await this.store.find().limit(limit).skip(offset);
+  }
+
+  async filterStore(filterStoreDto: FilterStoreDto) {
+    try {
+      console.log(filterStoreDto);
+      let store: Store[];
+      if (filterStoreDto.affiliater) {
+        store = await this.store.find({
+          affiliater: filterStoreDto.affiliater,
+        });
+      }
+      if (!store && filterStoreDto.documentId) {
+        store = await this.store.find({
+          documentId: filterStoreDto.documentId,
+        });
+      }
+      if (!store && filterStoreDto.phone) {
+        store = await this.store.find({ phone: filterStoreDto.phone });
+      }
+      if (!store) throw new NotFoundException('Stores not found');
+      return store;
+    } catch (error) {
+      console.log(error);
+      this.handleDbExceptions(error);
+    }
   }
 
   async findOne(term: string): Promise<Store> | never {

@@ -9,7 +9,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { StoreService } from './store.service';
-import { CreateStoreDto, UpdateStoreDto } from './dto';
+import { CreateStoreDto, FilterStoreDto, UpdateStoreDto } from './dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Controller('store')
@@ -24,6 +24,11 @@ export class StoreController {
   @Get()
   findAll(@Query() paginationDto: PaginationDto) {
     return this.storeService.findAll(paginationDto);
+  }
+
+  @Get('filter')
+  filterStores(@Query() filterStoreDto: FilterStoreDto) {
+    return this.storeService.filterStore(filterStoreDto);
   }
 
   @Get(':term')
