@@ -75,21 +75,21 @@ export const initialData: SeedData = {
   ],
   doctor: [
     {
-      name: 'Dr. Abel',
+      name: 'Dr. Abel Acuña',
       phone: '51947308823',
       speciality: 'Nutrición',
       fee: 150,
     },
     {
-      name: 'Dr. Jane Smith',
-      phone: '987-654-3210',
-      speciality: 'Dermatologist',
+      name: 'Dr. Manuel Talledo',
+      phone: '51980298900',
+      speciality: 'Nutrición',
       fee: 120,
     },
     {
-      name: 'Dr. Alan Turing',
-      phone: '111-222-3333',
-      speciality: 'Neurologist',
+      name: 'Dr. Sergio Talledo',
+      phone: '51980827944',
+      speciality: 'Nutrición',
       fee: 180,
     },
     {
