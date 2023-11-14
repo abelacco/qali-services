@@ -16,6 +16,7 @@ export class Affiliate extends Document {
   @Prop({
     required: true,
     minlength: 4,
+    set: (val: string) => val.toLowerCase().trim(),
   })
   fullname: string;
 

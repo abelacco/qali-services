@@ -6,9 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { AffiliateService } from './affiliate.service';
-import { CreateAffiliateDto, UpdateAffiliateDto } from './dto';
+import {
+  CreateAffiliateDto,
+  FilterAffiliateDto,
+  UpdateAffiliateDto,
+} from './dto';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Controller('affiliate')
 export class AffiliateController {
@@ -20,21 +26,26 @@ export class AffiliateController {
   }
 
   @Get()
-  findAll() {
-    return this.affiliateService.findAll();
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.affiliateService.findAll(paginationDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.affiliateService.findOne(+id);
+  // @Get(':term')
+  // findOne(@Param('term') term: string) {
+  //   return this.affiliateService.findOne(term);
+  // }
+
+  @Get('filter')
+  filterAffiliateBy(@Query() filterAffiliateDto: FilterAffiliateDto) {
+    return this.affiliateService.filterAffiliate(filterAffiliateDto);
   }
 
-  @Patch(':id')
+  @Patch(':term')
   update(
-    @Param('id') id: string,
+    @Param('term') term: string,
     @Body() updateAffiliateDto: UpdateAffiliateDto,
   ) {
-    return this.affiliateService.update(+id, updateAffiliateDto);
+    return this.affiliateService.update(term, updateAffiliateDto);
   }
 
   @Delete(':id')
