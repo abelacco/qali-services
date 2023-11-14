@@ -31,26 +31,48 @@ interface SeedStore {
 }
 
 interface SeedData {
-  // store: SeedStore[];
+  store: SeedStore[];
   doctor: SeedDoctor[];
   patient: SeedPatient[];
   appointment: SeedAppointment[];
 }
 
 export const initialData: SeedData = {
-  // store: [
-  //   {
-  //     documentId: '45787777',
-  //     fullname: 'rodrigo spano',
-  //     phone: '987-654-1234',
-  //     imageUrl: 'www.someimage.com',
-  //     codeQr: 'a7sd7asd8as',
-  //     lat: '2323',
-  //     long: '787878',
-  //     affiliater: '22456785',
-  //     isActive: true,
-  //   },
-  // ],
+  store: [
+    {
+      documentId: '45787777',
+      fullname: 'La bodega1',
+      phone: '987-654-1234',
+      imageUrl: 'www.someimage.com',
+      codeQr: 'a7sd7asd8as',
+      lat: '2323',
+      long: '787878',
+      affiliater: '111111111',
+      isActive: true,
+    },
+    {
+      documentId: '45787756',
+      fullname: 'La bodega2',
+      phone: '987-654-8723',
+      imageUrl: 'www.someimage.com',
+      codeQr: 'a7sd7asd8as',
+      lat: '2323',
+      long: '787878',
+      affiliater: '111111111',
+      isActive: true,
+    },
+    {
+      documentId: '87453345',
+      fullname: 'La bodega3',
+      phone: '987-623-5434',
+      imageUrl: 'www.someimage.com',
+      codeQr: 'a7sd7asd8as',
+      lat: '2323',
+      long: '787878',
+      affiliater: '22456785',
+      isActive: true,
+    },
+  ],
   doctor: [
     {
       name: 'Dr. Abel',
