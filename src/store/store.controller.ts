@@ -1,7 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { StoreService } from './store.service';
-import { CreateStoreDto } from './dto/create-store.dto';
-import { UpdateStoreDto } from './dto/update-store.dto';
+import { CreateStoreDto, FilterStoreDto, UpdateStoreDto } from './dto';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Controller('store')
 export class StoreController {
@@ -13,22 +22,32 @@ export class StoreController {
   }
 
   @Get()
-  findAll() {
-    return this.storeService.findAll();
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.storeService.findAll(paginationDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.storeService.findOne(+id);
+  @Get('filter')
+  filterStores(@Query() filterStoreDto: FilterStoreDto) {
+    return this.storeService.filterStore(filterStoreDto);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateStoreDto: UpdateStoreDto) {
-    return this.storeService.update(+id, updateStoreDto);
+  @Get(':term')
+  findOne(@Param('term') term: string) {
+    return this.storeService.findOne(term);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.storeService.remove(+id);
+  @Patch(':term')
+  update(@Param('term') term: string, @Body() updateStoreDto: UpdateStoreDto) {
+    return this.storeService.update(term, updateStoreDto);
+  }
+
+  @Get('active/:term')
+  toggleIsActiveStore(@Param('term') term: string) {
+    return this.storeService.toggleIsActiveStore(term);
+  }
+
+  @Delete(':term')
+  remove(@Param('term') term: string) {
+    return this.storeService.remove(term);
   }
 }
