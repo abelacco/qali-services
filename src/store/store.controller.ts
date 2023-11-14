@@ -36,13 +36,18 @@ export class StoreController {
     return this.storeService.findOne(term);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateStoreDto: UpdateStoreDto) {
-    return this.storeService.update(+id, updateStoreDto);
+  @Patch(':term')
+  update(@Param('term') term: string, @Body() updateStoreDto: UpdateStoreDto) {
+    return this.storeService.update(term, updateStoreDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.storeService.remove(+id);
+  @Get('active/:term')
+  toggleIsActiveStore(@Param('term') term: string) {
+    return this.storeService.toggleIsActiveStore(term);
+  }
+
+  @Delete(':term')
+  remove(@Param('term') term: string) {
+    return this.storeService.remove(term);
   }
 }

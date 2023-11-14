@@ -22,7 +22,7 @@ export class StoreService {
       const store: Store = await this.store.create(createStoreDto);
       return store;
     } catch (error) {
-      this.handleDbExceptions(error);
+      throw error;
     }
   }
 
@@ -51,7 +51,7 @@ export class StoreService {
       return store;
     } catch (error) {
       console.log(error);
-      this.handleDbExceptions(error);
+      throw error;
     }
   }
 
@@ -71,24 +71,36 @@ export class StoreService {
         );
       return store;
     } catch (error) {
-      this.handleDbExceptions(error);
+      throw error;
     }
   }
 
-  update(id: number, updateStoreDto: UpdateStoreDto) {
-    return `This action updates a #${id} store`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} store`;
-  }
-
-  private handleDbExceptions(error: any): never {
-    if (error.code === 11000) {
-      throw new BadRequestException(
-        `store with ${JSON.stringify(error.keyValue)} - already exists`,
-      );
+  async update(term: string, updateStoreDto: UpdateStoreDto) {
+    try {
+      const store = await this.findOne(term);
+      await store.updateOne(updateStoreDto, { new: true });
+      await store.save();
+      return Object.assign(store, updateStoreDto);
+    } catch (error) {
+      throw error;
     }
-    throw new InternalServerErrorException('check server logs!');
+  }
+
+  async toggleIsActiveStore(term: string) {
+    try {
+      const store: Store = await this.findOne(term);
+      await store.updateOne({ isActive: !store.isActive }, { new: true });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async remove(term: string) {
+    try {
+      const store = await this.findOne(term);
+      await store.deleteOne();
+    } catch (error) {
+      throw error;
+    }
   }
 }
