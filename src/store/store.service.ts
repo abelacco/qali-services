@@ -33,7 +33,6 @@ export class StoreService {
 
   async filterStore(filterStoreDto: FilterStoreDto) {
     try {
-      console.log(filterStoreDto);
       let store: Store[];
       if (filterStoreDto.affiliater) {
         store = await this.store.find({
