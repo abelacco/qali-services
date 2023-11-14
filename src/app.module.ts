@@ -10,12 +10,14 @@ import { AppointmentModule } from './appointment/appointment.module';
 import { PatientModule } from './patient/patient.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { NotificationModule } from './notification/notification.module';
+import { StoreModule } from './store/store.module';
+import { AfilliateModule } from './afilliate/afilliate.module';
 import { ApiPeruModule } from './api-peru/api-peru.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load:[EnvConfiguration],
+      load: [EnvConfiguration],
       validationSchema: JoiValidationSchema,
       isGlobal: true,
     }),
@@ -26,6 +28,8 @@ import { ApiPeruModule } from './api-peru/api-peru.module';
     PatientModule,
     CloudinaryModule,
     NotificationModule,
+    StoreModule,
+    AfilliateModule,
     ApiPeruModule,
   ],
   providers: [AppService],

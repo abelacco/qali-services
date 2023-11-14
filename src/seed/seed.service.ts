@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Doctor } from 'src/doctor/entities/doctor.entity';
-import { initialData } from './data'
+import { initialData } from './data';
 import { Appointment } from 'src/appointment/entities/appointment.entity';
 import { Patient } from 'src/patient/entities/patient.entity';
-
+import { Store } from 'src/store/entities/store.entity';
 
 @Injectable()
 export class SeedService {
@@ -16,16 +16,26 @@ export class SeedService {
     private _appointmentModel: Model<Appointment>,
     @InjectModel(Patient.name)
     private patientModel: Model<Patient>,
-  ) { }
+    @InjectModel(Store.name)
+    private readonly storeModel: Model<Store>,
+  ) {}
 
   async excuteSeed() {
     await this._appointmentModel.deleteMany({});
     await this.doctorModel.deleteMany();
     await this.patientModel.deleteMany();
+    await this.storeModel.deleteMany();
     const data = initialData;
     // Insertar doctores y pacientes y guardar los registros creados
-    const createdDoctors = await this.doctorModel.insertMany(initialData.doctor);
-    const createdPatients = await this.patientModel.insertMany(initialData.patient);
+    const createdDoctors = await this.doctorModel.insertMany(
+      initialData.doctor,
+    );
+    const createdPatients = await this.patientModel.insertMany(
+      initialData.patient,
+    );
+
+    // Insertar stores
+    await this.storeModel.insertMany(initialData.store);
 
     // Crear citas con doctores y pacientes asignados de manera aleatoria
     const appointments = initialData.appointment.map((app) => ({
