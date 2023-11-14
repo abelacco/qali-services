@@ -3,5 +3,7 @@ export const EnvConfiguration = () => ({
     mongodb: process.env.MONGODB,
     port: process.env.PORT || 3002,
     defaultLimit: +process.env.DEFAULT_LIMIT || 7,
+    peruApiKey: process.env.PERU_API_KEY,
+    peruUrlService: process.env.PERU_URL_SERVICE,
    });
    

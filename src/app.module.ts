@@ -12,12 +12,14 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { NotificationModule } from './notification/notification.module';
 import { StoreModule } from './store/store.module';
 import { AfilliateModule } from './afilliate/afilliate.module';
+import { ApiPeruModule } from './api-peru/api-peru.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load:[EnvConfiguration],
-      validationSchema: JoiValidationSchema
+      load: [EnvConfiguration],
+      validationSchema: JoiValidationSchema,
+      isGlobal: true,
     }),
     MongooseModule.forRoot(process.env.MONGODB),
     DoctorModule,
@@ -28,6 +30,7 @@ import { AfilliateModule } from './afilliate/afilliate.module';
     NotificationModule,
     StoreModule,
     AfilliateModule,
+    ApiPeruModule,
   ],
   providers: [AppService],
 })
