@@ -31,15 +31,15 @@ export class AffiliateController {
     return this.affiliateService.findAll(paginationDto);
   }
 
+  @Get('filter')
+  filterAffiliate(@Query() filterAffiliateDto: FilterAffiliateDto) {
+    return this.affiliateService.filterAffiliate(filterAffiliateDto);
+  }
+
   @Get(':term')
   findOne(@Param('term') term: string) {
     return this.affiliateService.findOne(term);
   }
-
-  // @Get('/filter')
-  // filterAffiliateBy(@Query() filterAffiliateDto: FilterAffiliateDto) {
-  //   return this.affiliateService.filterAffiliate(filterAffiliateDto);
-  // } //! No me reconoce la ruta
 
   @Patch(':term')
   update(

@@ -50,7 +50,23 @@ export class AffiliateService {
   }
 
   async filterAffiliate(filterAffiliateDto: FilterAffiliateDto) {
-    //todo => filter by fullname, dni and phone
+    const { documentId, fullname, phone } = filterAffiliateDto;
+    let affiliates: Affiliate[] | Affiliate;
+    try {
+      if (documentId) {
+        affiliates = await this._affiliate.find({ documentId });
+      }
+      if (!affiliates && fullname) {
+        affiliates = await this._affiliate.find({ fullname });
+      }
+      if (!affiliates && phone) {
+        affiliates = await this._affiliate.findOne({ phone });
+      }
+      if (!affiliates) throw new NotFoundException('Affiliates not found ');
+      return affiliates;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async update(term: string, updateAffiliateDto: UpdateAffiliateDto) {
