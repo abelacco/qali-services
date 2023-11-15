@@ -15,6 +15,7 @@ import {
   UpdateAffiliateDto,
 } from './dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id.pipe';
 
 @Controller('affiliate')
 export class AffiliateController {
@@ -30,15 +31,15 @@ export class AffiliateController {
     return this.affiliateService.findAll(paginationDto);
   }
 
-  // @Get(':term')
-  // findOne(@Param('term') term: string) {
-  //   return this.affiliateService.findOne(term);
-  // }
-
-  @Get('filter')
-  filterAffiliateBy(@Query() filterAffiliateDto: FilterAffiliateDto) {
-    return this.affiliateService.filterAffiliate(filterAffiliateDto);
+  @Get(':term')
+  findOne(@Param('term') term: string) {
+    return this.affiliateService.findOne(term);
   }
+
+  // @Get('/filter')
+  // filterAffiliateBy(@Query() filterAffiliateDto: FilterAffiliateDto) {
+  //   return this.affiliateService.filterAffiliate(filterAffiliateDto);
+  // } //! No me reconoce la ruta
 
   @Patch(':term')
   update(
@@ -48,8 +49,13 @@ export class AffiliateController {
     return this.affiliateService.update(term, updateAffiliateDto);
   }
 
+  @Patch('active/:term')
+  toggleIsAtiveAffiliate(@Param('term') term: string) {
+    return this.affiliateService.toggleIsActive(term);
+  }
+
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.affiliateService.remove(+id);
+  remove(@Param('id', ParseMongoIdPipe) id: string) {
+    return this.affiliateService.remove(id);
   }
 }

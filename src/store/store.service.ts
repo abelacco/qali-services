@@ -34,9 +34,9 @@ export class StoreService {
   async filterStore(filterStoreDto: FilterStoreDto) {
     try {
       let store: Store[];
-      if (filterStoreDto.affiliater) {
+      if (filterStoreDto.affiliateId) {
         store = await this.store.find({
-          affiliater: filterStoreDto.affiliater,
+          affiliateId: filterStoreDto.affiliateId,
         });
       }
       if (!store && filterStoreDto.documentId) {

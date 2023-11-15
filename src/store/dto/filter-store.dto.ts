@@ -11,5 +11,5 @@ export class FilterStoreDto {
 
   @IsOptional()
   @IsString()
-  affiliater?: string;
+  affiliateId?: string;
 }

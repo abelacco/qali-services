@@ -8,7 +8,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Affiliate } from './entities/affiliate.entity';
 import { Model, isValidObjectId } from 'mongoose';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { NotFoundException } from '@nestjs/common/exceptions';
+import {
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common/exceptions';
 
 @Injectable()
 export class AffiliateService {
@@ -51,10 +54,35 @@ export class AffiliateService {
   }
 
   async update(term: string, updateAffiliateDto: UpdateAffiliateDto) {
-    await this.findOne(term);
+    try {
+      const findAffiliate: Affiliate = await this.findOne(term);
+      await findAffiliate.updateOne(updateAffiliateDto, { new: true });
+      await findAffiliate.save();
+      return Object.assign(findAffiliate, updateAffiliateDto);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} affiliate`;
+  async toggleIsActive(term: string) {
+    try {
+      const findAffiliate: Affiliate = await this.findOne(term);
+      await findAffiliate.updateOne({ isActive: !findAffiliate.isActive });
+      await findAffiliate.save();
+      return {
+        message: `${
+          findAffiliate.fullname
+        } #isActive has been updated to ${!findAffiliate.isActive}`,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async remove(id: string) {
+    await this.findOne(id);
+    const { deletedCount } = await this._affiliate.deleteOne({ _id: id });
+    if (deletedCount === 0)
+      throw new BadRequestException('error deleting affiliate');
   }
 }
