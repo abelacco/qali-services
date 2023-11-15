@@ -12,5 +12,6 @@ import { Affiliate, AffiliateSchema } from './entities/affiliate.entity';
   ],
   controllers: [AffiliateController],
   providers: [AffiliateService],
+  exports: [MongooseModule, AffiliateService],
 })
 export class AffiliateModule {}

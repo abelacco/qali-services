@@ -27,10 +27,16 @@ interface SeedStore {
   lat: string;
   long: string;
   affiliateId: string;
-  isActive: boolean;
+}
+
+export interface SeedAffiliate {
+  documentId: string;
+  fullname: string;
+  phone: string;
 }
 
 interface SeedData {
+  affiliate: SeedAffiliate[];
   store: SeedStore[];
   doctor: SeedDoctor[];
   patient: SeedPatient[];
@@ -38,6 +44,28 @@ interface SeedData {
 }
 
 export const initialData: SeedData = {
+  affiliate: [
+    {
+      documentId: '45888223',
+      fullname: 'lucas martinez',
+      phone: '6677887762',
+    },
+    {
+      documentId: '45874232',
+      fullname: 'John Doe',
+      phone: '7766553344',
+    },
+    {
+      documentId: '45898456',
+      fullname: 'johny',
+      phone: '7766550099',
+    },
+    {
+      documentId: '87546543',
+      fullname: 'obiwan kenobi',
+      phone: '7755662345',
+    },
+  ],
   store: [
     {
       documentId: '45787777',
@@ -48,7 +76,6 @@ export const initialData: SeedData = {
       lat: '2323',
       long: '787878',
       affiliateId: '6553b5baaa22f773e33268b2',
-      isActive: true,
     },
     {
       documentId: '45787756',
@@ -59,7 +86,6 @@ export const initialData: SeedData = {
       lat: '2323',
       long: '787878',
       affiliateId: '6553b686b911bf98dd43fa3e',
-      isActive: true,
     },
     {
       documentId: '87453345',
@@ -70,7 +96,6 @@ export const initialData: SeedData = {
       lat: '2323',
       long: '787878',
       affiliateId: '6553d4f20d37014afb4cb0c3',
-      isActive: true,
     },
   ],
   doctor: [
