@@ -22,6 +22,11 @@ export class Doctor extends Document {
     type: Number,
   })
   fee: number;
+
+  @Prop({
+    type: String,
+  })
+  imageUrl: string;
 }
 
 export const DoctorSchema = SchemaFactory.createForClass(Doctor);

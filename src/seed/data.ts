@@ -3,6 +3,7 @@ interface SeedDoctor {
   phone: string;
   speciality: string;
   fee: number;
+  imageUrl: string;
 }
 
 interface SeedPatient {
@@ -79,60 +80,70 @@ export const initialData: SeedData = {
       phone: '51947308823',
       speciality: 'Nutrición',
       fee: 150,
+      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg'
     },
     {
       name: 'Dr. Manuel Talledo',
       phone: '51980298900',
       speciality: 'Nutrición',
       fee: 120,
+      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg'
     },
     {
       name: 'Dr. Sergio Talledo',
       phone: '51980827944',
       speciality: 'Nutrición',
       fee: 180,
+      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg'
     },
     {
       name: 'Dr. Ada Lovelace',
       phone: '444-555-6666',
       speciality: 'Pediatrician',
       fee: 140,
+      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg'
     },
     {
       name: 'Dr. Grace Hopper',
       phone: '777-888-9999',
       speciality: 'Radiologist',
       fee: 170,
+      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg'
     },
     {
       name: 'Dr. Richard Feynman',
       phone: '222-333-4444',
       speciality: 'Physicist',
       fee: 165,
+      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg'
     },
     {
       name: 'Dr. Katherine Johnson',
       phone: '555-666-7777',
       speciality: 'Gynecologist',
       fee: 155,
+      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg'
     },
     {
       name: 'Dr. Carl Sagan',
       phone: '888-999-0000',
       speciality: 'Astronomer',
       fee: 190,
+      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg'
     },
     {
       name: 'Dr. Mary Jackson',
       phone: '999-000-1111',
       speciality: 'Endocrinologist',
       fee: 150,
+      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg'
     },
     {
       name: 'Dr. James Clerk Maxwell',
       phone: '000-111-2222',
       speciality: 'Electromagnetism',
       fee: 160,
+      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg'
     },
   ],
   patient: [
