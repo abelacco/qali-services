@@ -41,7 +41,7 @@ export class StoreController {
     return this.storeService.update(term, updateStoreDto);
   }
 
-  @Get('active/:term')
+  @Patch('active/:term')
   toggleIsActiveStore(@Param('term') term: string) {
     return this.storeService.toggleIsActiveStore(term);
   }

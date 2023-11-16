@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IsBoolean, IsString } from 'class-validator';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 @Schema()
 export class Store extends Document {
@@ -52,11 +52,12 @@ export class Store extends Document {
   })
   long: string;
 
-  @IsString()
   @Prop({
+    type: Types.ObjectId,
+    ref: 'Affiliate',
     required: true,
   })
-  affiliater: string;
+  affiliateId: string;
 
   @IsBoolean()
   @Prop({

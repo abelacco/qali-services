@@ -6,6 +6,7 @@ import { initialData } from './data';
 import { Appointment } from 'src/appointment/entities/appointment.entity';
 import { Patient } from 'src/patient/entities/patient.entity';
 import { Store } from 'src/store/entities/store.entity';
+import { Affiliate } from 'src/affiliate/entities/affiliate.entity';
 
 @Injectable()
 export class SeedService {
@@ -18,12 +19,15 @@ export class SeedService {
     private patientModel: Model<Patient>,
     @InjectModel(Store.name)
     private readonly storeModel: Model<Store>,
+    @InjectModel(Affiliate.name)
+    private readonly affiliateModel: Model<Affiliate>,
   ) {}
 
   async excuteSeed() {
     await this._appointmentModel.deleteMany({});
     await this.doctorModel.deleteMany();
     await this.patientModel.deleteMany();
+    await this.affiliateModel.deleteMany();
     await this.storeModel.deleteMany();
     const data = initialData;
     // Insertar doctores y pacientes y guardar los registros creados
@@ -34,8 +38,17 @@ export class SeedService {
       initialData.patient,
     );
 
-    // Insertar stores
-    await this.storeModel.insertMany(initialData.store);
+    // Insertar stores y afiliados
+    const affiliates = await this.affiliateModel.insertMany(
+      initialData.affiliate,
+    );
+
+    const storesModified = initialData.store.map((st) => ({
+      ...st,
+      affiliateId: this.getRandomItem(affiliates)._id,
+    }));
+
+    await this.storeModel.insertMany(storesModified);
 
     // Crear citas con doctores y pacientes asignados de manera aleatoria
     const appointments = initialData.appointment.map((app) => ({

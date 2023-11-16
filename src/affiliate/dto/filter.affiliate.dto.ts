@@ -1,6 +1,6 @@
 import { IsOptional, IsString } from 'class-validator';
 
-export class FilterStoreDto {
+export class FilterAffiliateDto {
   @IsOptional()
   @IsString()
   documentId?: string;
@@ -11,5 +11,5 @@ export class FilterStoreDto {
 
   @IsOptional()
   @IsString()
-  affiliateId?: string;
+  fullname?: string;
 }
