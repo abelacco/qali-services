@@ -39,8 +39,16 @@ export class SeedService {
     );
 
     // Insertar stores y afiliados
-    await this.affiliateModel.insertMany(initialData.affiliate);
-    await this.storeModel.insertMany(initialData.store);
+    const affiliates = await this.affiliateModel.insertMany(
+      initialData.affiliate,
+    );
+
+    const storesModified = initialData.store.map((st) => ({
+      ...st,
+      affiliateId: this.getRandomItem(affiliates)._id,
+    }));
+
+    await this.storeModel.insertMany(storesModified);
 
     // Crear citas con doctores y pacientes asignados de manera aleatoria
     const appointments = initialData.appointment.map((app) => ({
