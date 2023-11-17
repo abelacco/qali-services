@@ -125,6 +125,14 @@ export class PaymentService {
     }
   }
 
+  async deleteAll() {
+    try {
+      await this._db.deleteAll();
+    } catch (error) {
+      throw error;
+    }
+  }
+
   private CalculateDate(_date: string): CalculateDateResponse {
     const startDate = new Date(_date);
     // Calcular endDate sumando 7 días a startDate

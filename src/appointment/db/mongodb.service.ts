@@ -6,7 +6,7 @@ import { mongoExceptionHandler } from 'src/common/mongoExceptionHandler';
 import { Appointment } from '../entities/appointment.entity';
 import { UpdateAppointmentDto } from '../dto/update-appointment.dto';
 import { CreateAppointmentDto } from '../dto/create-appointment.dto';
-import { StartDateDto } from 'src/common/dto';
+import { PaginationDto, StartDateDto } from 'src/common/dto';
 
 @Injectable()
 export class MongoDbService implements IAppointmentDao {
@@ -95,10 +95,9 @@ export class MongoDbService implements IAppointmentDao {
         })
         .exec();
       return appointments;
-    } catch (error) {}
-  }
-  catch(error) {
-    if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
-    else throw error;
+    } catch (error) {
+      if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
+      else throw error;
+    }
   }
 }

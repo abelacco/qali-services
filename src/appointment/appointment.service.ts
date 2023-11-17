@@ -102,10 +102,7 @@ export class AppointmentService {
 
   async FilterAppointmentsByDate(startDateDto: StartDateDto) {
     try {
-      const results = await this._mongoDbService.filterByDate(startDateDto);
-      if (!results)
-        throw new NotFoundException('Could not found any appointments');
-      return results;
+      return await this._mongoDbService.filterByDate(startDateDto);
     } catch (error) {
       throw error;
     }

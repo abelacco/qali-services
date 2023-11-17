@@ -12,4 +12,5 @@ export interface IPaymentDao {
   filterBy(filterPaymentDate: IFilterPaymentDb): Promise<Payment[]>;
   updateStatus(_id: string): Promise<void>;
   deletePayment(_id: string): Promise<void>;
+  deleteAll(): Promise<void>;
 }

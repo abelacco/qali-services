@@ -102,4 +102,13 @@ export class MongoDbService implements IPaymentDao {
       else throw error;
     }
   }
+
+  async deleteAll(): Promise<void> {
+    try {
+      await this._payment.deleteMany();
+    } catch (error) {
+      if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
+      else throw error;
+    }
+  }
 }

@@ -52,4 +52,9 @@ export class PaymentController {
   remove(@Param('id', ParseMongoIdPipe) id: string) {
     return this.paymentService.remove(id);
   }
+
+  @Delete('delete/all')
+  deleteAll() {
+    return this.paymentService.deleteAll();
+  }
 }

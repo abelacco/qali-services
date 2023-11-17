@@ -1,4 +1,4 @@
-import { StartDateDto } from 'src/common/dto';
+import { PaginationDto, StartDateDto } from 'src/common/dto';
 import { CreateAppointmentDto, UpdateAppointmentDto } from '../dto';
 import { Appointment } from '../entities/appointment.entity';
 
