@@ -9,21 +9,28 @@ import {
   Query,
 } from '@nestjs/common';
 import { PaymentService } from './payment.service';
-import { UpdatePaymentDto, CreatePaymentDto } from './dto';
+import { CreateOnePaymentDto } from './dto';
 import { PaginationDto, StartDateDto } from 'src/common/dto';
+import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id.pipe';
+import { FilterPaymentDto } from './dto/filter-payment.dto';
 
 @Controller('payment')
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
-  // @Post()
-  // create(@Body() createPaymentDto: CreatePaymentDto) {
-  //   return this.paymentService.create(createPaymentDto);
-  // }
+  @Post('createOne')
+  create(@Body() createOnePaymentDto: CreateOnePaymentDto) {
+    return this.paymentService.createOne(createOnePaymentDto);
+  }
 
-  @Get('/filter')
-  filterByDates(@Query() dateDto: StartDateDto) {
+  @Get('consolidate')
+  consolidatePayments(@Query() dateDto: StartDateDto) {
     return this.paymentService.consolidatePaymentDoctor(dateDto);
+  }
+
+  @Get('filter')
+  filterBy(@Query() filterPaymentDto: FilterPaymentDto) {
+    return this.paymentService.filterBy(filterPaymentDto);
   }
 
   @Get()
@@ -32,17 +39,17 @@ export class PaymentController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.paymentService.findOne(+id);
+  findOne(@Param('id', ParseMongoIdPipe) id: string) {
+    return this.paymentService.findById(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePaymentDto: UpdatePaymentDto) {
-    return this.paymentService.update(+id, updatePaymentDto);
+  update(@Param('id', ParseMongoIdPipe) id: string) {
+    return this.paymentService.update(id);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.paymentService.remove(+id);
+  remove(@Param('id', ParseMongoIdPipe) id: string) {
+    return this.paymentService.remove(id);
   }
 }

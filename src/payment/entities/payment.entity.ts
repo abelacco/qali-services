@@ -11,7 +11,7 @@ export class Payment {
   startDate: Date;
 
   @Prop({ type: Date })
-  endDate: string;
+  endDate: Date;
 
   @Prop({
     type: Types.ObjectId,

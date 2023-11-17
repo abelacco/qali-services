@@ -1,11 +1,8 @@
 import { IsDate, IsPositive, IsString, Min } from 'class-validator';
 
-export class CreatePaymentDto {
+export class CreateOnePaymentDto {
   @IsDate()
-  startDate: Date;
-
-  @IsDate()
-  endDate: Date;
+  date: Date;
 
   @IsString()
   doctorId: string;
@@ -17,15 +14,4 @@ export class CreatePaymentDto {
   @IsPositive()
   @Min(1)
   transactionBeforeFee: number;
-
-  @IsPositive()
-  @Min(1)
-  doctorEarnings: number;
-
-  @IsPositive()
-  @Min(1)
-  qaliFee: number;
-
-  @IsDate()
-  paymentDate: Date;
 }
