@@ -7,6 +7,9 @@ import { Appointment } from '../entities/appointment.entity';
 import { UpdateAppointmentDto } from '../dto/update-appointment.dto';
 import { CreateAppointmentDto } from '../dto/create-appointment.dto';
 
+import { PaginationDto, StartDateDto } from 'src/common/dto';
+
+
 @Injectable()
 export class MongoDbService implements IAppointmentDao {
   constructor(
@@ -18,6 +21,7 @@ export class MongoDbService implements IAppointmentDao {
     createAppointmentDto: CreateAppointmentDto,
   ): Promise<Appointment> {
     try {
+
       const months = {
         '1': 'ENE',
         '2': 'FEB',
@@ -118,4 +122,23 @@ export class MongoDbService implements IAppointmentDao {
       else throw error;
     }
   }
+
+
+  async filterByDate(dateDto: StartDateDto): Promise<Appointment[]> {
+    try {
+      const appointments = await this._appointmentModel
+        .find({
+          date: {
+            $gte: dateDto.startDate,
+            $lte: dateDto.endDate,
+          },
+        })
+        .exec();
+      return appointments;
+    } catch (error) {
+      if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
+      else throw error;
+    }
+  }
+
 }

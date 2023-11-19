@@ -6,18 +6,21 @@ import { Appointment } from './entities/appointment.entity';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 import { Status } from 'src/common/constants';
 import { NotificationService } from 'src/notification/notification.service';
+import { StartDateDto } from 'src/common/dto';
 
 @Injectable()
 export class AppointmentService {
-  private readonly _db: IAppointmentDao
+  private readonly _db: IAppointmentDao;
   constructor(
     readonly _mongoDbService: MongoDbService,
-    private readonly noficationService: NotificationService
+    private readonly noficationService: NotificationService,
   ) {
-    this._db = _mongoDbService
+    this._db = _mongoDbService;
   }
 
-  async addOne(createAppointmentDto: CreateAppointmentDto): Promise<Appointment> {
+  async addOne(
+    createAppointmentDto: CreateAppointmentDto,
+  ): Promise<Appointment> {
     Logger.log(JSON.stringify(createAppointmentDto));
     try {
       const createAppointment = this._db.create(createAppointmentDto);
@@ -30,7 +33,8 @@ export class AppointmentService {
   async getAll(): Promise<Array<Appointment>> {
     try {
       const results = await this._db.findAll();
-      if (!results) throw new NotFoundException('Could not find any appointment');
+      if (!results)
+        throw new NotFoundException('Could not find any appointment');
       return results;
     } catch (error) {
       throw error;
@@ -52,14 +56,11 @@ export class AppointmentService {
     updateAppointmentDto: UpdateAppointmentDto,
   ): Promise<any> {
     try {
-      const appointment = await this._db.update(
-        id,
-        updateAppointmentDto,
-      );
+      const appointment = await this._db.update(id, updateAppointmentDto);
       if (!appointment) throw new NotFoundException('Appointment not found');
-      let message = `Appointment ${appointment.id} updated successfully`
-    
-      return  appointment
+      let message = `Appointment ${appointment.id} updated successfully`;
+
+      return appointment;
     } catch (error) {
       throw error;
     }
@@ -76,20 +77,32 @@ export class AppointmentService {
   }
 
   async updateAndConfirmPayment(
-      id: string,
-      updateAppointmentDto: UpdateAppointmentDto,) {
-        console.log('updateAndConfirmPayment')
+    id: string,
+    updateAppointmentDto: UpdateAppointmentDto,
+  ) {
+    console.log('updateAndConfirmPayment');
     try {
-        await this.update(id, updateAppointmentDto)
-        let createNotificationDto = {
-            status: updateAppointmentDto.status,
-            id: id
-        }
-        console.log(updateAppointmentDto)
-        if(updateAppointmentDto.status === Status.CONFIRMED || updateAppointmentDto.status === Status.CANCELED){
-          console.log('confirm payment')  
-          this.noficationService.confirmPayment(createNotificationDto)
-        }
+      await this.update(id, updateAppointmentDto);
+      let createNotificationDto = {
+        status: updateAppointmentDto.status,
+        id: id,
+      };
+      console.log(updateAppointmentDto);
+      if (
+        updateAppointmentDto.status === Status.CONFIRMED ||
+        updateAppointmentDto.status === Status.CANCELED
+      ) {
+        console.log('confirm payment');
+        this.noficationService.confirmPayment(createNotificationDto);
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async FilterAppointmentsByDate(startDateDto: StartDateDto) {
+    try {
+      return await this._mongoDbService.filterByDate(startDateDto);
     } catch (error) {
       throw error;
     }

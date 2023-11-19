@@ -14,7 +14,7 @@ import {
   FilterAffiliateDto,
   UpdateAffiliateDto,
 } from './dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginationDto } from 'src/common/dto';
 import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id.pipe';
 
 @Controller('affiliate')

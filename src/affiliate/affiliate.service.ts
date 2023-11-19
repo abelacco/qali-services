@@ -7,7 +7,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Affiliate } from './entities/affiliate.entity';
 import { Model, isValidObjectId } from 'mongoose';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginationDto } from 'src/common/dto';
 import {
   NotFoundException,
   BadRequestException,
