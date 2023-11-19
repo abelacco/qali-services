@@ -6,7 +6,9 @@ import { mongoExceptionHandler } from 'src/common/mongoExceptionHandler';
 import { Appointment } from '../entities/appointment.entity';
 import { UpdateAppointmentDto } from '../dto/update-appointment.dto';
 import { CreateAppointmentDto } from '../dto/create-appointment.dto';
+
 import { PaginationDto, StartDateDto } from 'src/common/dto';
+
 
 @Injectable()
 export class MongoDbService implements IAppointmentDao {
@@ -19,9 +21,46 @@ export class MongoDbService implements IAppointmentDao {
     createAppointmentDto: CreateAppointmentDto,
   ): Promise<Appointment> {
     try {
+
+      const months = {
+        '1': 'ENE',
+        '2': 'FEB',
+        '3': 'MAR',
+        '4': 'ABR',
+        '5': 'MAY',
+        '6': 'JUN',
+        '7': 'JUL',
+        '8': 'AGO',
+        '9': 'SEP',
+        '10': 'OCT',
+        '11': 'NOV',
+        '12': 'DIC',
+      };
       const createAppointment = new this._appointmentModel(
         createAppointmentDto,
       );
+      const fechaActual = new Date();
+      const fechaFormateada = `${fechaActual
+        .getDate()
+        .toString()
+        .padStart(2, '0')}${months[(fechaActual.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')]}${fechaActual.getFullYear().toString().substr(-2)}`;
+      const ultimaCita = await this._appointmentModel
+        .findOne({
+          code: { $regex: fechaFormateada },
+        })
+        .sort({ code: -1 })
+        .exec();
+      let ultimoNumero = 0;
+      if (ultimaCita) {
+        ultimoNumero = parseInt(ultimaCita.code.substr(-4), 10) + 1;
+      }
+      const nuevoNumero = ultimoNumero;
+      const identificador = `${fechaFormateada}${nuevoNumero
+        .toString()
+        .padStart(4, '0')}`;
+      createAppointment.code = identificador;
       await createAppointment.save();
       return createAppointment;
     } catch (error) {
@@ -84,6 +123,7 @@ export class MongoDbService implements IAppointmentDao {
     }
   }
 
+
   async filterByDate(dateDto: StartDateDto): Promise<Appointment[]> {
     try {
       const appointments = await this._appointmentModel
@@ -100,4 +140,5 @@ export class MongoDbService implements IAppointmentDao {
       else throw error;
     }
   }
+
 }
