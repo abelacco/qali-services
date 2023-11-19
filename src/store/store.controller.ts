@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { StoreService } from './store.service';
 import { CreateStoreDto, FilterStoreDto, UpdateStoreDto } from './dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginationDto } from 'src/common/dto';
 
 @Controller('store')
 export class StoreController {

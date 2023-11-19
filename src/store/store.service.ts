@@ -8,7 +8,7 @@ import { CreateStoreDto, FilterStoreDto, UpdateStoreDto } from './dto';
 import { Store } from './entities/store.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, isValidObjectId } from 'mongoose';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginationDto } from 'src/common/dto';
 
 @Injectable()
 export class StoreService {
