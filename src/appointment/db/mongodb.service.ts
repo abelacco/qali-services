@@ -9,7 +9,6 @@ import { CreateAppointmentDto } from '../dto/create-appointment.dto';
 
 import { PaginationDto, StartDateDto } from 'src/common/dto';
 
-
 @Injectable()
 export class MongoDbService implements IAppointmentDao {
   constructor(
@@ -21,7 +20,6 @@ export class MongoDbService implements IAppointmentDao {
     createAppointmentDto: CreateAppointmentDto,
   ): Promise<Appointment> {
     try {
-
       const months = {
         '1': 'ENE',
         '2': 'FEB',
@@ -43,9 +41,9 @@ export class MongoDbService implements IAppointmentDao {
       const fechaFormateada = `${fechaActual
         .getDate()
         .toString()
-        .padStart(2, '0')}${months[(fechaActual.getMonth() + 1)
-        .toString()
-        .padStart(2, '0')]}${fechaActual.getFullYear().toString().substr(-2)}`;
+        .padStart(2, '0')}${
+        months[(fechaActual.getMonth() + 1).toString().padStart(2, '0')]
+      }${fechaActual.getFullYear().toString().substr(-2)}`;
       const ultimaCita = await this._appointmentModel
         .findOne({
           code: { $regex: fechaFormateada },
@@ -123,12 +121,11 @@ export class MongoDbService implements IAppointmentDao {
     }
   }
 
-
   async filterByDate(dateDto: StartDateDto): Promise<Appointment[]> {
     try {
       const appointments = await this._appointmentModel
         .find({
-          date: {
+          createdAt: {
             $gte: dateDto.startDate,
             $lte: dateDto.endDate,
           },
@@ -140,5 +137,4 @@ export class MongoDbService implements IAppointmentDao {
       else throw error;
     }
   }
-
 }

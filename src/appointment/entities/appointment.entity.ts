@@ -1,19 +1,18 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document, Types } from "mongoose";
-import { Status } from "src/common/constants";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Types } from 'mongoose';
+import { Status } from 'src/common/constants';
 
-@Schema()
+@Schema({ timestamps: true })
 export class Appointment extends Document {
   @Prop({
     type: Types.ObjectId,
-    ref: 'Doctor',  // Ref doctor
-
+    ref: 'Doctor', // Ref doctor
   })
   doctorId: string;
 
   @Prop({
     type: Types.ObjectId,
-    ref: 'Patient',  // Ref Patient
+    ref: 'Patient', // Ref Patient
   })
   patientId: string;
 
@@ -30,7 +29,7 @@ export class Appointment extends Document {
   @Prop({
     type: Number,
     enum: Status,
-    default: 0
+    default: 0,
   })
   status: number;
 
