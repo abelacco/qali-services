@@ -13,6 +13,6 @@ export const DOCUMENT_IDENTIFIERS = {
 };
 
 export const PaymentStatus = {
-  POR_PAGAR: 'por pagar',
-  PAGADO: 'pagado',
+  PENDING: 0,
+  PAYED: 1,
 };

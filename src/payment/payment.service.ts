@@ -3,16 +3,19 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CalculateDateResponse } from './interfaces/calculate-date-response.interfaces';
-import { Appointment } from 'src/appointment/entities/appointment.entity';
+
 import { AppointmentService } from 'src/appointment/appointment.service';
 import { PaginationDto, StartDateDto } from 'src/common/dto';
-import { CreateOnePaymentDto, CreatePaymentDto } from './dto';
+import { CreateOnePaymentDto, CreatePaymentDto, FilterPaymentDto } from './dto';
 import { MongoDbService } from './db/mongodb.service';
 import { Payment } from './entities/payment.entity';
 import { IPaymentDao } from './db/paymentDao';
-import { IAppointmentResult } from './interfaces/appointment-result.interface';
-import { FilterPaymentDto } from './dto/filter-payment.dto';
+import {
+  calculatePaymentFee,
+  CalculateDoctorsAppointments,
+  CalculateDate,
+  transformIntoPayment,
+} from './utils/helper/';
 
 @Injectable()
 export class PaymentService {
@@ -26,10 +29,8 @@ export class PaymentService {
 
   async createOne(createPaymentDto: CreateOnePaymentDto) {
     try {
-      const calculateDates = this.CalculateDate(
-        createPaymentDto.date.toString(),
-      );
-      const calculatedFees = this.calculatePaymentFee(
+      const calculateDates = CalculateDate(createPaymentDto.date.toString());
+      const calculatedFees = calculatePaymentFee(
         createPaymentDto.transactionBeforeFee,
       );
       const finalPaymentObj: CreatePaymentDto = {
@@ -69,20 +70,26 @@ export class PaymentService {
   }
 
   async consolidatePaymentDoctor(startDate: StartDateDto) {
-    //todo => si hago la peticion otra vez se vuelve a crear !ARREGLAR
     try {
-      const dates = this.CalculateDate(startDate.startDate);
+      const dates = CalculateDate(startDate.startDate);
+      // trae las citas de la semana especificada
       const filteredData =
         await this._appointmentService.FilterAppointmentsByDate({
           startDate: dates.startDate.toISOString(),
           endDate: dates.endDate.toISOString(),
         });
       // todas las citas del mismo doctor durante la semana se suman y se vuelven una para crear payments
-      const doctorsAppointments =
-        this.CalculateDoctorsAppointments(filteredData);
-      const modifiedPayments = this.transformIntoPayment(doctorsAppointments);
-      const createPayments = await this._db.createManyPayments(
+      const doctorsAppointments = CalculateDoctorsAppointments(filteredData);
+      const modifiedPayments: Payment[] =
+        transformIntoPayment(doctorsAppointments);
+      // //* validar payments
+      const validateConsolidates: Payment[] = await this.validateConsolidate(
         modifiedPayments,
+      );
+      if (!validateConsolidates.length) return;
+      //* create payments
+      const createPayments = await this._db.createManyPayments(
+        validateConsolidates,
       );
       return createPayments;
     } catch (error) {
@@ -95,7 +102,7 @@ export class PaymentService {
     if (!date && !doctorId)
       throw new BadRequestException('need date or doctorId');
     if (date) {
-      const calculateDates = this.CalculateDate(date);
+      const calculateDates = CalculateDate(date);
       const newDates = {
         startDate: calculateDates.startDate.toISOString(),
         endDate: calculateDates.endDate.toISOString(),
@@ -133,68 +140,21 @@ export class PaymentService {
     }
   }
 
-  private CalculateDate(_date: string): CalculateDateResponse {
-    const startDate = new Date(_date);
-    // Calcular endDate sumando 7 días a startDate
-    const endDate = new Date(startDate);
-    endDate.setDate(startDate.getDate() + 7);
-    // Calcular el próximo viernes cercano después de endDate
-    const paymentDate = new Date(endDate);
-    const diasHastaViernes = (5 - endDate.getDay() + 7) % 7;
-    paymentDate.setDate(endDate.getDate() + diasHastaViernes);
+  private async validateConsolidate(
+    consolidates: Payment[],
+  ): Promise<Payment[]> {
+    try {
+      const results: Payment[] = [];
 
-    return {
-      startDate,
-      endDate,
-      paymentDate,
-    };
-  }
-
-  private CalculateDoctorsAppointments(
-    appointments: Appointment[],
-  ): IAppointmentResult[] {
-    let result: IAppointmentResult[] = [];
-
-    appointments.reduce((acc, el) => {
-      if (!acc[el.doctorId]) {
-        const generateDates = this.CalculateDate(el.date.toString());
-        acc[el.doctorId] = {
-          doctorId: el.doctorId,
-          appointmentQ: 1,
-          transactionBeforeFee: el.fee,
-          startDate: generateDates.startDate,
-          endDate: generateDates.endDate,
-          paymentDate: generateDates.paymentDate,
-        };
-      } else {
-        acc[el.doctorId].appointmentQ += 1;
-        acc[el.doctorId].transactionBeforeFee += el.fee;
-      }
-      return acc;
-    }, result);
-    const resultArray = Object.values(result);
-
-    return resultArray;
-  }
-
-  private calculatePaymentFee(total: number) {
-    const qaliFee: number = total * 0.15;
-    const doctorEarnings: number = total - qaliFee;
-    return {
-      qaliFee,
-      doctorEarnings,
-    };
-  }
-
-  private transformIntoPayment(appointmentsResult: IAppointmentResult[]) {
-    const paymentsModfied = appointmentsResult.map((el) => {
-      const calcFees = this.calculatePaymentFee(el.transactionBeforeFee);
-      return {
-        ...el,
-        qaliFee: calcFees.qaliFee,
-        doctorEarnings: calcFees.doctorEarnings,
-      };
-    });
-    return paymentsModfied;
+      await Promise.all(
+        consolidates.map(async (el) => {
+          const validate: boolean = await this._db.validateConsolidate(el);
+          validate == false && results.push({ ...el });
+        }),
+      );
+      return results;
+    } catch (error) {
+      throw error;
+    }
   }
 }

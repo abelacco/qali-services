@@ -1,7 +1,6 @@
-import { PaginationDto, StartDateDto } from 'src/common/dto';
+import { PaginationDto } from 'src/common/dto';
 import { Payment } from '../entities/payment.entity';
 import { CreatePaymentDto } from '../dto';
-import { FilterPaymentDto } from '../dto/filter-payment.dto';
 import { IFilterPaymentDb } from '../interfaces/filter-payment-db.interface';
 
 export interface IPaymentDao {
@@ -13,4 +12,5 @@ export interface IPaymentDao {
   updateStatus(_id: string): Promise<void>;
   deletePayment(_id: string): Promise<void>;
   deleteAll(): Promise<void>;
+  validateConsolidate(consolidate: CreatePaymentDto): Promise<boolean>;
 }

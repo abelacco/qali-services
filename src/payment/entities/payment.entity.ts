@@ -49,10 +49,10 @@ export class Payment {
   qaliFee: number;
 
   @Prop({
-    default: PaymentStatus.POR_PAGAR,
-    type: String,
+    default: PaymentStatus.PENDING,
+    type: Number,
   })
-  status: 'por pagar' | 'pagado';
+  status: 0 | 1;
 
   @Prop({
     type: Date,
