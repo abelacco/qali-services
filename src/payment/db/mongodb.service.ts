@@ -86,7 +86,7 @@ export class MongoDbService implements IPaymentDao {
   async updateStatus(_id: string): Promise<void> {
     try {
       await this._payment.findByIdAndUpdate(_id, {
-        status: PaymentStatus.PAGADO,
+        status: PaymentStatus.PAYED,
       });
     } catch (error) {
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
@@ -106,6 +106,31 @@ export class MongoDbService implements IPaymentDao {
   async deleteAll(): Promise<void> {
     try {
       await this._payment.deleteMany();
+    } catch (error) {
+      if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
+      else throw error;
+    }
+  }
+
+  async validateConsolidate(consolidate: CreatePaymentDto): Promise<boolean> {
+    try {
+      const findPayment = await this._payment.findOne({
+        startDate: consolidate.startDate.toString(),
+        endDate: consolidate.endDate.toString(),
+        doctorId: consolidate.doctorId,
+      });
+
+      if (!findPayment) return false;
+
+      if (
+        findPayment &&
+        consolidate.appointmentQ !== findPayment.appointmentQ
+      ) {
+        await findPayment.updateOne({
+          appointmentQ: consolidate.appointmentQ,
+        });
+      }
+      return true;
     } catch (error) {
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
       else throw error;
