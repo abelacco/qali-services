@@ -9,12 +9,12 @@ import { NotificationModule } from 'src/notification/notification.module';
 @Module({
   imports: [
     MongooseModule.forFeature([
-      {name: Appointment.name, schema: AppointmentSchema}
+      { name: Appointment.name, schema: AppointmentSchema },
     ]),
-    NotificationModule
+    NotificationModule,
   ],
   controllers: [AppointmentController],
   providers: [AppointmentService, MongoDbService],
-  exports: [MongooseModule]
+  exports: [MongooseModule, AppointmentService],
 })
 export class AppointmentModule {}

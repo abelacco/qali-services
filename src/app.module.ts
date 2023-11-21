@@ -13,6 +13,7 @@ import { NotificationModule } from './notification/notification.module';
 import { AffiliateModule } from './affiliate/affiliate.module';
 import { StoreModule } from './store/store.module';
 import { ApiPeruModule } from './api-peru/api-peru.module';
+import { PaymentModule } from './payment/payment.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ApiPeruModule } from './api-peru/api-peru.module';
     StoreModule,
     AffiliateModule,
     ApiPeruModule,
+    PaymentModule,
   ],
   providers: [AppService],
 })
