@@ -2,6 +2,8 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  forwardRef,
+  Inject,
 } from '@nestjs/common';
 
 import { AppointmentService } from 'src/appointment/appointment.service';
@@ -30,6 +32,7 @@ import { ApiResponseStatus } from 'src/common/constants';
 export class PaymentService {
   private readonly _db: IPaymentDao;
   constructor(
+    @Inject(forwardRef(() => AppointmentService))
     private readonly _appointmentService: AppointmentService,
     readonly _mongoDbService: MongoDbService,
     readonly _doctorService: DoctorService,
@@ -53,7 +56,7 @@ export class PaymentService {
         doctorEarnings: calculatedFees.doctorEarnings,
         qaliFee: calculatedFees.qaliFee,
       };
-      const createPayment = this._db.createOnePayment(finalPaymentObj);
+      const createPayment = await this._db.createOnePayment(finalPaymentObj);
       return new ApiResponse(
         createPayment,
         'Payment create successfully!',
