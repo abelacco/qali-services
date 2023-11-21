@@ -16,7 +16,11 @@ import {
 } from './dto';
 import { PaginationDto, StartDateDto } from 'src/common/dto';
 import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id.pipe';
+import { FilterPaymentDto } from './dto/filter-payment.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+
+@ApiTags('Payment')
 @Controller('payment')
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
