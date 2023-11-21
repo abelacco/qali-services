@@ -1,6 +1,10 @@
 import { PaginationDto } from 'src/common/dto';
 import { Payment } from '../entities/payment.entity';
-import { CodeTransactionDto, CreatePaymentDto } from '../dto';
+import {
+  CodeTransactionDto,
+  CreatePaymentDto,
+  FilterPaymentsDto,
+} from '../dto';
 import { IFilterPaymentDb } from '../interfaces/filter-payment-db.interface';
 
 export interface IPaymentDao {
@@ -8,6 +12,7 @@ export interface IPaymentDao {
   findOneByID(id: string): Promise<Payment>;
   createManyPayments(createPaymentDto: CreatePaymentDto[]): Promise<Payment[]>;
   createOnePayment(createPayment: CreatePaymentDto): Promise<Payment>;
+  // filterBy(filterPaymentDate: IFilterPaymentDb): Promise<Payment[]>;
   filterBy(filterPaymentDate: IFilterPaymentDb): Promise<Payment[]>;
   updateStatus(
     _id: string,

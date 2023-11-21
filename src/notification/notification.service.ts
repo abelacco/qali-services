@@ -6,18 +6,18 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class NotificationService {
+  constructor(private configService: ConfigService) {}
 
-  constructor(
-    private configService: ConfigService,
-  ) {}
-  
   async confirmPayment(createNotificationDto: CreateNotificationDto) {
-    const wspServicesUrl = this.configService.get<string>('WSP_SERVICES_DEPLOY');
+    const wspServicesUrl = this.configService.get<string>(
+      'WSP_SERVICES_DEPLOY',
+    );
     console.log(wspServicesUrl);
-    const response = await axios.post(`${wspServicesUrl}/paymentStatus`, createNotificationDto);
+    const response = await axios.post(
+      `${wspServicesUrl}/paymentStatus`,
+      createNotificationDto,
+    );
     console.log(response);
     return response;
   }
-
- 
 }

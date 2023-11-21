@@ -50,9 +50,9 @@ export class Payment {
 
   @Prop({
     default: PaymentStatus.PENDING,
-    type: Number,
+    type: String,
   })
-  status: 0 | 1;
+  status: string;
 
   @Prop({
     type: Date,

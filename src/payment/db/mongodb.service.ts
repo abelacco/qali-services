@@ -6,8 +6,9 @@ import { Model, mongo } from 'mongoose';
 import { PaginationDto } from 'src/common/dto';
 import { mongoExceptionHandler } from 'src/common/mongoExceptionHandler';
 import { CodeTransactionDto, CreatePaymentDto } from '../dto';
-import { IFilterPaymentDb } from '../interfaces/filter-payment-db.interface';
 import { PaymentStatus } from 'src/common/constants';
+import { CalculateDate } from '../utils/helper';
+import { IFilterPaymentDb } from '../interfaces';
 
 @Injectable()
 export class MongoDbService implements IPaymentDao {
@@ -62,20 +63,54 @@ export class MongoDbService implements IPaymentDao {
   }
 
   async filterBy(filterPaymentData: IFilterPaymentDb): Promise<Payment[]> {
-    const { startDate, doctorId, endDate } = filterPaymentData;
     try {
-      let result: Payment[];
+      const {
+        startDate,
+        endDate,
+        doctorId,
+        status,
+        limit = 0,
+        offset = 0,
+      } = filterPaymentData;
+      let results: Payment[];
+
       if (startDate && endDate) {
-        result = await this._payment.find({
-          startDate,
-          endDate: { $lte: endDate, $gte: startDate },
-        });
+        results = await this._payment
+          .find({
+            startDate: { $gte: startDate },
+            endDate: { $lte: endDate },
+          })
+          .populate('doctorId')
+          .limit(limit)
+          .skip(offset)
+          .exec();
       }
-      if (!result && doctorId) {
-        result = await this._payment.find({ doctorId });
+
+      const thisWeek = CalculateDate(new Date().toISOString());
+      if (!results && doctorId) {
+        results = await this._payment
+          .find({
+            doctorId,
+            startDate: { $gte: thisWeek.startDate },
+            endDate: { $lte: thisWeek.endDate },
+          })
+          .populate('doctorId')
+          .limit(limit)
+          .skip(offset)
+          .exec();
       }
-      if (!result) throw new NotFoundException('Could not find any Payment');
-      return result;
+
+      if (!results && status) {
+        results = await this._payment
+          .find({ status })
+          .populate('doctorId')
+          .limit(limit)
+          .skip(offset)
+          .exec();
+      }
+
+      if (!results) throw new NotFoundException('Could not found payments');
+      return results;
     } catch (error) {
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
       else throw error;

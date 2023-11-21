@@ -11,6 +11,7 @@ import {
   CreateOnePaymentDto,
   CreatePaymentDto,
   FilterPaymentDto,
+  FilterPaymentsDto,
 } from './dto';
 import { MongoDbService } from './db/mongodb.service';
 import { Payment } from './entities/payment.entity';
@@ -20,8 +21,9 @@ import {
   CalculateDoctorsAppointments,
   CalculateDate,
   transformIntoPayment,
+  verifyIsMonday,
 } from './utils/helper/';
-import { verifyIsMonday } from './utils/helper/isMonday-helper';
+import { DoctorService } from 'src/doctor/doctor.service';
 
 @Injectable()
 export class PaymentService {
@@ -29,6 +31,7 @@ export class PaymentService {
   constructor(
     private readonly _appointmentService: AppointmentService,
     readonly _mongoDbService: MongoDbService,
+    readonly _doctorService: DoctorService,
   ) {
     this._db = _mongoDbService;
   }
@@ -106,22 +109,36 @@ export class PaymentService {
     }
   }
 
-  async filterBy(filterPaymentDto: FilterPaymentDto) {
-    const { date, doctorId } = filterPaymentDto;
-    if (!date && !doctorId)
-      throw new BadRequestException('need date or doctorId');
-    if (date) {
-      const calculateDates = CalculateDate(date);
-      const newDates = {
-        startDate: calculateDates.startDate.toISOString(),
-        endDate: calculateDates.endDate.toISOString(),
-      };
-      return this._db.filterBy(newDates);
-    }
-    if (!date && doctorId) {
-      return this._db.filterBy({ doctorId });
+  async filterBy(filterPaymentDto: FilterPaymentsDto) {
+    try {
+      if (filterPaymentDto.doctorName) {
+        const findDoctor = await this._doctorService.getByName(
+          filterPaymentDto.doctorName,
+        );
+        return this._db.filterBy({ doctorId: findDoctor._id });
+      }
+      return this._db.filterBy(filterPaymentDto);
+    } catch (error) {
+      throw error;
     }
   }
+  // async filterBy(filterPaymentDto: FilterPaymentDto) {
+  // const { date, doctorName } = filterPaymentDto;
+  // if (!date && !doctorName)
+  //   throw new BadRequestException('need date or doctorName');
+  // if (date) {
+  //   const calculateDates = CalculateDate(date);
+  //   const newDates = {
+  //     startDate: calculateDates.startDate.toISOString(),
+  //     endDate: calculateDates.endDate.toISOString(),
+  //   };
+  //   return this._db.filterBy(newDates);
+  // }
+  // if (!date && doctorName) {
+  //   const findDoctor = await this._doctorService.getByName(doctorName);
+  //   return this._db.filterBy({ doctorId: findDoctor._id });
+  // }
+  // }
 
   async update(id: string, codeTransaction: CodeTransactionDto) {
     try {

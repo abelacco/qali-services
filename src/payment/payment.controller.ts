@@ -12,7 +12,7 @@ import { PaymentService } from './payment.service';
 import { CodeTransactionDto, CreateOnePaymentDto } from './dto';
 import { PaginationDto, StartDateDto } from 'src/common/dto';
 import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id.pipe';
-import { FilterPaymentDto } from './dto/filter-payment.dto';
+import { FilterPaymentsDto } from './dto/filter-payment.dto';
 
 @Controller('payment')
 export class PaymentController {
@@ -29,8 +29,8 @@ export class PaymentController {
   }
 
   @Get('filter')
-  filterBy(@Query() filterPaymentDto: FilterPaymentDto) {
-    return this.paymentService.filterBy(filterPaymentDto);
+  filterBy(@Query() filterPaymentsDto: FilterPaymentsDto) {
+    return this.paymentService.filterBy(filterPaymentsDto);
   }
 
   @Get()
