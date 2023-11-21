@@ -3,20 +3,20 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Document, Types } from "mongoose";
 import { Status } from "src/common/constants";
 
-@Schema()
+
+@Schema({ timestamps: true })
 export class Appointment extends Document {
   @ApiProperty()
   @Prop({
     type: Types.ObjectId,
-    ref: 'Doctor',  // Ref doctor
-
+    ref: 'Doctor', // Ref doctor
   })
   doctorId: string;
 
   @ApiProperty()
   @Prop({
     type: Types.ObjectId,
-    ref: 'Patient',  // Ref Patient
+    ref: 'Patient', // Ref Patient
   })
   patientId: string;
 
@@ -36,7 +36,7 @@ export class Appointment extends Document {
   @Prop({
     type: Number,
     enum: Status,
-    default: 0
+    default: 0,
   })
   status: number;
 
