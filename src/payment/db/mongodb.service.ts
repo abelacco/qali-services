@@ -5,8 +5,7 @@ import { Payment } from '../entities/payment.entity';
 import { Model, mongo } from 'mongoose';
 import { PaginationDto } from 'src/common/dto';
 import { mongoExceptionHandler } from 'src/common/mongoExceptionHandler';
-import { CreatePaymentDto } from '../dto';
-import { FilterPaymentDto } from '../dto/filter-payment.dto';
+import { CodeTransactionDto, CreatePaymentDto } from '../dto';
 import { IFilterPaymentDb } from '../interfaces/filter-payment-db.interface';
 import { PaymentStatus } from 'src/common/constants';
 
@@ -83,10 +82,14 @@ export class MongoDbService implements IPaymentDao {
     }
   }
 
-  async updateStatus(_id: string): Promise<void> {
+  async updateStatus(
+    _id: string,
+    codeTransactionDto: CodeTransactionDto,
+  ): Promise<void> {
     try {
       await this._payment.findByIdAndUpdate(_id, {
         status: PaymentStatus.PAYED,
+        codeTransaction: codeTransactionDto.codeTransaction,
       });
     } catch (error) {
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);

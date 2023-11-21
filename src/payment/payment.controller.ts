@@ -9,7 +9,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { PaymentService } from './payment.service';
-import { CreateOnePaymentDto } from './dto';
+import { CodeTransactionDto, CreateOnePaymentDto } from './dto';
 import { PaginationDto, StartDateDto } from 'src/common/dto';
 import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id.pipe';
 import { FilterPaymentDto } from './dto/filter-payment.dto';
@@ -44,8 +44,11 @@ export class PaymentController {
   }
 
   @Patch(':id')
-  update(@Param('id', ParseMongoIdPipe) id: string) {
-    return this.paymentService.update(id);
+  update(
+    @Param('id', ParseMongoIdPipe) id: string,
+    @Body() codeTransactionDto: CodeTransactionDto,
+  ) {
+    return this.paymentService.update(id, codeTransactionDto);
   }
 
   @Delete(':id')

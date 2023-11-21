@@ -6,7 +6,12 @@ import {
 
 import { AppointmentService } from 'src/appointment/appointment.service';
 import { PaginationDto, StartDateDto } from 'src/common/dto';
-import { CreateOnePaymentDto, CreatePaymentDto, FilterPaymentDto } from './dto';
+import {
+  CodeTransactionDto,
+  CreateOnePaymentDto,
+  CreatePaymentDto,
+  FilterPaymentDto,
+} from './dto';
 import { MongoDbService } from './db/mongodb.service';
 import { Payment } from './entities/payment.entity';
 import { IPaymentDao } from './db/paymentDao';
@@ -16,6 +21,7 @@ import {
   CalculateDate,
   transformIntoPayment,
 } from './utils/helper/';
+import { verifyIsMonday } from './utils/helper/isMonday-helper';
 
 @Injectable()
 export class PaymentService {
@@ -71,6 +77,9 @@ export class PaymentService {
 
   async consolidatePaymentDoctor(startDate: StartDateDto) {
     try {
+      const isMonday: number = verifyIsMonday(startDate.startDate);
+      if (!isMonday)
+        throw new BadRequestException('StartDate should be monday');
       const dates = CalculateDate(startDate.startDate);
       // trae las citas de la semana especificada
       const filteredData =
@@ -114,10 +123,10 @@ export class PaymentService {
     }
   }
 
-  async update(id: string) {
+  async update(id: string, codeTransaction: CodeTransactionDto) {
     try {
       await this.findById(id);
-      return await this._db.updateStatus(id);
+      return await this._db.updateStatus(id, codeTransaction);
     } catch (error) {
       throw error;
     }

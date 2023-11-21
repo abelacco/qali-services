@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { IsOptional } from 'class-validator';
 import { Document, Types } from 'mongoose';
 import { Status } from 'src/common/constants';
 
@@ -15,7 +16,7 @@ export class Appointment extends Document {
     ref: 'Patient', // Ref Patient
   })
   patientId: string;
-
+  x;
   @Prop({
     type: Date,
   })
@@ -42,6 +43,12 @@ export class Appointment extends Document {
     type: String,
   })
   voucher: string;
+
+  @IsOptional()
+  @Prop({
+    type: Date,
+  })
+  createdAt: Date;
 }
 
 export const AppointmentSchema = SchemaFactory.createForClass(Appointment);

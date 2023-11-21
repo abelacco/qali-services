@@ -59,6 +59,12 @@ export class Payment {
     required: true,
   })
   paymentDate: Date;
+
+  @Prop({
+    type: String,
+    default: null,
+  })
+  codeTransaction?: string;
 }
 
 export const PaymentSchema = SchemaFactory.createForClass(Payment);
