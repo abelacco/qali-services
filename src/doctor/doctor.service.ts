@@ -8,11 +8,9 @@ import { FindDoctorDto } from './dto/find-doctor.dto';
 
 @Injectable()
 export class DoctorService {
-  private readonly _db: IDoctorDao
-  constructor(
-    readonly _mongoDbService: MongoDbService,
-  ) {
-    this._db = _mongoDbService
+  private readonly _db: IDoctorDao;
+  constructor(readonly _mongoDbService: MongoDbService) {
+    this._db = _mongoDbService;
   }
 
   async addOne(createDoctorDto: CreateDoctorDto): Promise<Doctor> {
@@ -34,6 +32,14 @@ export class DoctorService {
     }
   }
 
+  async getByName(name: string): Promise<Doctor> {
+    try {
+      return this._db.findByName(name);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async getById(id: string): Promise<Doctor> {
     try {
       const doctor = await this._db.findById(id);
@@ -44,15 +50,9 @@ export class DoctorService {
     }
   }
 
-  async update(
-    id: string,
-    updateDoctorDto: UpdateDoctorDto,
-  ): Promise<string> {
+  async update(id: string, updateDoctorDto: UpdateDoctorDto): Promise<string> {
     try {
-      const doctor = await this._db.update(
-        id,
-        updateDoctorDto,
-      );
+      const doctor = await this._db.update(id, updateDoctorDto);
       if (!doctor) throw new NotFoundException('Doctor not found');
       return `Doctor ${doctor.id} updated successfully`;
     } catch (error) {

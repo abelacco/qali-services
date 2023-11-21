@@ -13,9 +13,9 @@ import { MongoDbService } from './db/mongodb.service';
       {
         name: Doctor.name,
         schema: DoctorSchema,
-      }
+      },
     ]),
   ],
-  exports: [MongooseModule],
+  exports: [MongooseModule, DoctorService],
 })
 export class DoctorModule {}

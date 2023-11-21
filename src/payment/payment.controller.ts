@@ -9,11 +9,16 @@ import {
   Query,
 } from '@nestjs/common';
 import { PaymentService } from './payment.service';
-import { CreateOnePaymentDto } from './dto';
+import {
+  CodeTransactionDto,
+  CreateOnePaymentDto,
+  FilterPaymentsDto,
+} from './dto';
 import { PaginationDto, StartDateDto } from 'src/common/dto';
 import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id.pipe';
 import { FilterPaymentDto } from './dto/filter-payment.dto';
 import { ApiTags } from '@nestjs/swagger';
+
 
 @ApiTags('Payment')
 @Controller('payment')
@@ -31,8 +36,8 @@ export class PaymentController {
   }
 
   @Get('filter')
-  filterBy(@Query() filterPaymentDto: FilterPaymentDto) {
-    return this.paymentService.filterBy(filterPaymentDto);
+  filterBy(@Query() filterPaymentsDto: FilterPaymentsDto) {
+    return this.paymentService.filterBy(filterPaymentsDto);
   }
 
   @Get()
@@ -46,8 +51,11 @@ export class PaymentController {
   }
 
   @Patch(':id')
-  update(@Param('id', ParseMongoIdPipe) id: string) {
-    return this.paymentService.update(id);
+  update(
+    @Param('id', ParseMongoIdPipe) id: string,
+    @Body() codeTransactionDto: CodeTransactionDto,
+  ) {
+    return this.paymentService.update(id, codeTransactionDto);
   }
 
   @Delete(':id')

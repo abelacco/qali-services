@@ -50,15 +50,21 @@ export class Payment {
 
   @Prop({
     default: PaymentStatus.PENDING,
-    type: Number,
+    type: String,
   })
-  status: 0 | 1;
+  status: string;
 
   @Prop({
     type: Date,
     required: true,
   })
   paymentDate: Date;
+
+  @Prop({
+    type: String,
+    default: null,
+  })
+  codeTransaction?: string;
 }
 
 export const PaymentSchema = SchemaFactory.createForClass(Payment);

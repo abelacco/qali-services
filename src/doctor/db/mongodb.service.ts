@@ -1,12 +1,12 @@
-import { Injectable } from "@nestjs/common";
-import { IDoctorDao } from "./doctorDao";
-import { InjectModel } from "@nestjs/mongoose";
-import { Model, mongo } from "mongoose";
-import { mongoExceptionHandler } from "src/common/mongoExceptionHandler";
-import { Doctor } from "../entities/doctor.entity";
-import { CreateDoctorDto } from "../dto/create-doctor.dto";
-import { UpdateDoctorDto } from "../dto/update-doctor.dto";
-import { FindDoctorDto } from "../dto/find-doctor.dto";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { IDoctorDao } from './doctorDao';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, mongo } from 'mongoose';
+import { mongoExceptionHandler } from 'src/common/mongoExceptionHandler';
+import { Doctor } from '../entities/doctor.entity';
+import { CreateDoctorDto } from '../dto/create-doctor.dto';
+import { UpdateDoctorDto } from '../dto/update-doctor.dto';
+import { FindDoctorDto } from '../dto/find-doctor.dto';
 
 @Injectable()
 export class MongoDbService implements IDoctorDao {
@@ -35,6 +35,17 @@ export class MongoDbService implements IDoctorDao {
     }
   }
 
+  async findByName(name: string): Promise<Doctor> {
+    try {
+      const findDoctor: Doctor = await this._doctorModel.findOne({ name });
+      if (!findDoctor) throw new NotFoundException('doctor not found!');
+      return findDoctor;
+    } catch (error) {
+      if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
+      else throw error;
+    }
+  }
+
   async findById(id: string): Promise<Doctor> {
     try {
       const doctor = await this._doctorModel.findById(id);
@@ -45,10 +56,7 @@ export class MongoDbService implements IDoctorDao {
     }
   }
 
-  async update(
-    id: string,
-    updateDoctorDto: UpdateDoctorDto,
-  ): Promise<Doctor> {
+  async update(id: string, updateDoctorDto: UpdateDoctorDto): Promise<Doctor> {
     try {
       const doctor = await this._doctorModel.findByIdAndUpdate(
         id,
