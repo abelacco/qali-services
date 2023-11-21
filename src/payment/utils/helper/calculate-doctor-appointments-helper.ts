@@ -9,7 +9,7 @@ export function CalculateDoctorsAppointments(
 
   appointments.reduce((acc, el) => {
     if (!acc[el.doctorId]) {
-      const generateDates = CalculateDate(el.date.toString());
+      const generateDates = CalculateDate(el.createdAt.toISOString());
       acc[el.doctorId] = {
         doctorId: el.doctorId,
         appointmentQ: 1,

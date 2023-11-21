@@ -16,7 +16,9 @@ import {
 } from './dto';
 import { PaginationDto } from 'src/common/dto';
 import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id.pipe';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Affiliate')
 @Controller('affiliate')
 export class AffiliateController {
   constructor(private readonly affiliateService: AffiliateService) {}

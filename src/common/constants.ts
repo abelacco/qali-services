@@ -12,7 +12,12 @@ export const DOCUMENT_IDENTIFIERS = {
   RUC_TYPE: 'ruc',
 };
 
-export const PaymentStatus = {
-  PENDING: 0,
-  PAYED: 1,
-};
+export enum PaymentStatus {
+  PENDING = '0',
+  PAYED = '1',
+}
+
+export enum ApiResponseStatus {
+  SUCCESS = '1',
+  ERROR = '2',
+}

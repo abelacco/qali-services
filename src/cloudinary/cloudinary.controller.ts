@@ -1,8 +1,9 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator } from '@nestjs/common';
 import { CloudinaryService } from './cloudinary.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiTags } from '@nestjs/swagger';
 
-
+@ApiTags('Cloudinary')
 @Controller('cloudinary')
 export class CloudinaryController {
   constructor(private readonly cloudinaryService: CloudinaryService) {}
