@@ -35,7 +35,7 @@ export class CreateStoreDto {
 
   @IsString()
   @MinLength(8)
-  affiliater: string;
+  affiliateId: string;
 
   @IsBoolean()
   @IsOptional()
