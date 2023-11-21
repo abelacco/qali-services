@@ -23,6 +23,8 @@ import {
   verifyIsMonday,
 } from './utils/helper/';
 import { DoctorService } from 'src/doctor/doctor.service';
+import { ApiResponse } from 'src/common/models/api-response';
+import { ApiResponseStatus } from 'src/common/constants';
 
 @Injectable()
 export class PaymentService {
@@ -51,7 +53,12 @@ export class PaymentService {
         doctorEarnings: calculatedFees.doctorEarnings,
         qaliFee: calculatedFees.qaliFee,
       };
-      return this._db.createOnePayment(finalPaymentObj);
+      const createPayment = this._db.createOnePayment(finalPaymentObj);
+      return new ApiResponse(
+        createPayment,
+        'Payment create successfully!',
+        ApiResponseStatus.SUCCESS,
+      );
     } catch (error) {
       throw error;
     }
@@ -61,7 +68,11 @@ export class PaymentService {
     try {
       const payments = await this._db.findAll(paginationDto);
       if (!payments) throw new NotFoundException('Could not found any Payment');
-      return payments;
+      return new ApiResponse(
+        payments,
+        'FindAll payments executed!',
+        ApiResponseStatus.SUCCESS,
+      );
     } catch (error) {
       throw error;
     }
@@ -71,7 +82,11 @@ export class PaymentService {
     try {
       const payment = await this._db.findOneByID(id);
       if (!payment) throw new NotFoundException('Payment not found!');
-      return payment;
+      return new ApiResponse(
+        payment,
+        'Payment found!',
+        ApiResponseStatus.SUCCESS,
+      );
     } catch (error) {
       throw error;
     }
@@ -97,12 +112,21 @@ export class PaymentService {
       const validateConsolidates: Payment[] = await this.validateConsolidate(
         modifiedPayments,
       );
-      if (!validateConsolidates.length) return;
+      if (!validateConsolidates.length)
+        return new ApiResponse(
+          {},
+          'There is not new payments to consolidate!!',
+          ApiResponseStatus.SUCCESS,
+        );
       //* create payments
       const createPayments = await this._db.createManyPayments(
         validateConsolidates,
       );
-      return createPayments;
+      return new ApiResponse(
+        createPayments,
+        'Payments consolidated successfully!',
+        ApiResponseStatus.SUCCESS,
+      );
     } catch (error) {
       throw error;
     }
@@ -114,35 +138,35 @@ export class PaymentService {
         const findDoctor = await this._doctorService.getByName(
           filterPaymentDto.doctorName,
         );
-        return this._db.filterBy({ doctorId: findDoctor._id });
+        const paymentsFiltered = await this._db.filterBy({
+          doctorId: findDoctor._id,
+        });
+        return new ApiResponse(
+          paymentsFiltered,
+          `Payments filtered by doctor: ${filterPaymentDto.doctorName}!`,
+          ApiResponseStatus.SUCCESS,
+        );
       }
-      return this._db.filterBy(filterPaymentDto);
+      const filteredPayments = await this._db.filterBy(filterPaymentDto);
+      return new ApiResponse(
+        filteredPayments,
+        `Payments filtered successfully!`,
+        ApiResponseStatus.SUCCESS,
+      );
     } catch (error) {
       throw error;
     }
   }
-  // async filterBy(filterPaymentDto: FilterPaymentDto) {
-  // const { date, doctorName } = filterPaymentDto;
-  // if (!date && !doctorName)
-  //   throw new BadRequestException('need date or doctorName');
-  // if (date) {
-  //   const calculateDates = CalculateDate(date);
-  //   const newDates = {
-  //     startDate: calculateDates.startDate.toISOString(),
-  //     endDate: calculateDates.endDate.toISOString(),
-  //   };
-  //   return this._db.filterBy(newDates);
-  // }
-  // if (!date && doctorName) {
-  //   const findDoctor = await this._doctorService.getByName(doctorName);
-  //   return this._db.filterBy({ doctorId: findDoctor._id });
-  // }
-  // }
 
   async update(id: string, codeTransaction: CodeTransactionDto) {
     try {
       await this.findById(id);
-      return await this._db.updateStatus(id, codeTransaction);
+      await this._db.updateStatus(id, codeTransaction);
+      return new ApiResponse(
+        {},
+        'payment updated Successfully with status and codeTransaction!',
+        ApiResponseStatus.SUCCESS,
+      );
     } catch (error) {
       throw error;
     }
@@ -152,6 +176,11 @@ export class PaymentService {
     try {
       await this.findById(id);
       await this._db.deletePayment(id);
+      return new ApiResponse(
+        {},
+        'Payment removed successfully!',
+        ApiResponseStatus.SUCCESS,
+      );
     } catch (error) {
       throw error;
     }
@@ -160,6 +189,11 @@ export class PaymentService {
   async deleteAll() {
     try {
       await this._db.deleteAll();
+      return new ApiResponse(
+        {},
+        'all Payments deleted successfully!',
+        ApiResponseStatus.SUCCESS,
+      );
     } catch (error) {
       throw error;
     }
