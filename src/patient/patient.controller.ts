@@ -10,7 +10,7 @@ export class PatientController {
   constructor(private readonly patientService: PatientService) {}
 
   @Post()
-  @ApiResponse({status: 201, description: 'Appointment was creat', type: Patient})
+  @ApiResponse({status: 201, description: 'Parient was creat', type: Patient})
   @ApiResponse({status: 400, description: 'Bad request'})
   create(@Body() createPatientDto: CreatePatientDto) {
     return this.patientService.addOne(createPatientDto);
