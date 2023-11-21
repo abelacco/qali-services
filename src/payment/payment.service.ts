@@ -10,7 +10,6 @@ import {
   CodeTransactionDto,
   CreateOnePaymentDto,
   CreatePaymentDto,
-  FilterPaymentDto,
   FilterPaymentsDto,
 } from './dto';
 import { MongoDbService } from './db/mongodb.service';

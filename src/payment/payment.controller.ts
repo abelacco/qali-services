@@ -9,10 +9,13 @@ import {
   Query,
 } from '@nestjs/common';
 import { PaymentService } from './payment.service';
-import { CodeTransactionDto, CreateOnePaymentDto } from './dto';
+import {
+  CodeTransactionDto,
+  CreateOnePaymentDto,
+  FilterPaymentsDto,
+} from './dto';
 import { PaginationDto, StartDateDto } from 'src/common/dto';
 import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id.pipe';
-import { FilterPaymentsDto } from './dto/filter-payment.dto';
 
 @Controller('payment')
 export class PaymentController {
