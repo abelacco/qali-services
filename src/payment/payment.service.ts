@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Injectable,
   NotFoundException,
   forwardRef,
@@ -13,6 +12,7 @@ import {
   CreateOnePaymentDto,
   CreatePaymentDto,
   FilterPaymentsDto,
+  MainGetAllPaymentsWithFiltersDto,
 } from './dto';
 import { MongoDbService } from './db/mongodb.service';
 import { Payment } from './entities/payment.entity';
@@ -22,11 +22,8 @@ import {
   CalculateDoctorsAppointments,
   CalculateDate,
   transformIntoPayment,
-  verifyIsMonday,
 } from './utils/helper/';
 import { DoctorService } from 'src/doctor/doctor.service';
-import { ApiResponse } from 'src/common/models/api-response';
-import { ApiResponseStatus } from 'src/common/constants';
 
 @Injectable()
 export class PaymentService {
@@ -38,6 +35,36 @@ export class PaymentService {
     readonly _doctorService: DoctorService,
   ) {
     this._db = _mongoDbService;
+  }
+
+  async MainGetAllPayments(
+    queryDto: MainGetAllPaymentsWithFiltersDto,
+  ): Promise<Payment[]> {
+    try {
+      const {
+        doctorName,
+        endDate,
+        limit = 0,
+        offset = 0,
+        startDate,
+        status,
+      } = queryDto;
+      await this.consolidatePaymentDoctor({ startDate, endDate });
+      let results: Payment[];
+      if (doctorName) {
+        results = await this.filterBy({ doctorName, limit, offset });
+      }
+      if (!results && startDate && endDate) {
+        results = await this.filterBy({ startDate, endDate, limit, offset });
+      }
+      if (!results && status) {
+        results = await this.filterBy({ status, limit, offset });
+      }
+      if (!results) results = await this.findAll({ limit, offset });
+      return results;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async createOne(createPaymentDto: CreateOnePaymentDto) {
@@ -56,12 +83,7 @@ export class PaymentService {
         doctorEarnings: calculatedFees.doctorEarnings,
         qaliFee: calculatedFees.qaliFee,
       };
-      const createPayment = await this._db.createOnePayment(finalPaymentObj);
-      return new ApiResponse(
-        createPayment,
-        'Payment create successfully!',
-        ApiResponseStatus.SUCCESS,
-      );
+      return await this._db.createOnePayment(finalPaymentObj);
     } catch (error) {
       throw error;
     }
@@ -71,11 +93,7 @@ export class PaymentService {
     try {
       const payments = await this._db.findAll(paginationDto);
       if (!payments) throw new NotFoundException('Could not found any Payment');
-      return new ApiResponse(
-        payments,
-        'FindAll payments executed!',
-        ApiResponseStatus.SUCCESS,
-      );
+      return payments;
     } catch (error) {
       throw error;
     }
@@ -85,11 +103,7 @@ export class PaymentService {
     try {
       const payment = await this._db.findOneByID(id);
       if (!payment) throw new NotFoundException('Payment not found!');
-      return new ApiResponse(
-        payment,
-        'Payment found!',
-        ApiResponseStatus.SUCCESS,
-      );
+      return payment;
     } catch (error) {
       throw error;
     }
@@ -97,10 +111,8 @@ export class PaymentService {
 
   async consolidatePaymentDoctor(startDate: StartDateDto) {
     try {
-      const isMonday: number = verifyIsMonday(startDate.startDate);
-      if (!isMonday)
-        throw new BadRequestException('StartDate should be monday');
-      const dates = CalculateDate(startDate.startDate);
+      if (!startDate.startDate) startDate.startDate = new Date().toISOString();
+      const dates = await CalculateDate(startDate.startDate);
       // trae las citas de la semana especificada
       const filteredData =
         await this._appointmentService.FilterAppointmentsByDate({
@@ -115,21 +127,9 @@ export class PaymentService {
       const validateConsolidates: Payment[] = await this.validateConsolidate(
         modifiedPayments,
       );
-      if (!validateConsolidates.length)
-        return new ApiResponse(
-          {},
-          'There is not new payments to consolidate!!',
-          ApiResponseStatus.SUCCESS,
-        );
+      if (!validateConsolidates.length) return;
       //* create payments
-      const createPayments = await this._db.createManyPayments(
-        validateConsolidates,
-      );
-      return new ApiResponse(
-        createPayments,
-        'Payments consolidated successfully!',
-        ApiResponseStatus.SUCCESS,
-      );
+      return await this._db.createManyPayments(validateConsolidates);
     } catch (error) {
       throw error;
     }
@@ -141,21 +141,11 @@ export class PaymentService {
         const findDoctor = await this._doctorService.getByName(
           filterPaymentDto.doctorName,
         );
-        const paymentsFiltered = await this._db.filterBy({
+        return await this._db.filterBy({
           doctorId: findDoctor._id,
         });
-        return new ApiResponse(
-          paymentsFiltered,
-          `Payments filtered by doctor: ${filterPaymentDto.doctorName}!`,
-          ApiResponseStatus.SUCCESS,
-        );
       }
-      const filteredPayments = await this._db.filterBy(filterPaymentDto);
-      return new ApiResponse(
-        filteredPayments,
-        `Payments filtered successfully!`,
-        ApiResponseStatus.SUCCESS,
-      );
+      return await this._db.filterBy(filterPaymentDto);
     } catch (error) {
       throw error;
     }
@@ -165,11 +155,6 @@ export class PaymentService {
     try {
       await this.findById(id);
       await this._db.updateStatus(id, codeTransaction);
-      return new ApiResponse(
-        {},
-        'payment updated Successfully with status and codeTransaction!',
-        ApiResponseStatus.SUCCESS,
-      );
     } catch (error) {
       throw error;
     }
@@ -179,11 +164,6 @@ export class PaymentService {
     try {
       await this.findById(id);
       await this._db.deletePayment(id);
-      return new ApiResponse(
-        {},
-        'Payment removed successfully!',
-        ApiResponseStatus.SUCCESS,
-      );
     } catch (error) {
       throw error;
     }
@@ -192,11 +172,6 @@ export class PaymentService {
   async deleteAll() {
     try {
       await this._db.deleteAll();
-      return new ApiResponse(
-        {},
-        'all Payments deleted successfully!',
-        ApiResponseStatus.SUCCESS,
-      );
     } catch (error) {
       throw error;
     }

@@ -13,12 +13,13 @@ import {
   CodeTransactionDto,
   CreateOnePaymentDto,
   FilterPaymentsDto,
+  MainGetAllPaymentsWithFiltersDto,
 } from './dto';
 import { PaginationDto, StartDateDto } from 'src/common/dto';
 import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id.pipe';
-import { FilterPaymentDto } from './dto/filter-payment.dto';
 import { ApiTags } from '@nestjs/swagger';
-
+import { ApiResponse } from 'src/common/models/api-response';
+import { ApiResponseStatus } from 'src/common/constants';
 
 @ApiTags('Payment')
 @Controller('payment')
@@ -26,45 +27,106 @@ export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
   @Post('createOne')
-  create(@Body() createOnePaymentDto: CreateOnePaymentDto) {
-    return this.paymentService.createOne(createOnePaymentDto);
+  async create(@Body() createOnePaymentDto: CreateOnePaymentDto) {
+    const response = await this.paymentService.createOne(createOnePaymentDto);
+    return new ApiResponse(
+      response,
+      'Payment create successfully!',
+      ApiResponseStatus.SUCCESS,
+    );
   }
 
   @Get('consolidate')
-  consolidatePayments(@Query() dateDto: StartDateDto) {
-    return this.paymentService.consolidatePaymentDoctor(dateDto);
+  async consolidatePayments(@Query() dateDto: StartDateDto) {
+    const response = await this.paymentService.consolidatePaymentDoctor(
+      dateDto,
+    );
+    return new ApiResponse(
+      response,
+      'Payments consolidated successfully!',
+      ApiResponseStatus.SUCCESS,
+    );
   }
 
   @Get('filter')
-  filterBy(@Query() filterPaymentsDto: FilterPaymentsDto) {
-    return this.paymentService.filterBy(filterPaymentsDto);
+  async filterBy(@Query() filterPaymentsDto: FilterPaymentsDto) {
+    const response = await this.paymentService.filterBy(filterPaymentsDto);
+    if (filterPaymentsDto.doctorName) {
+      return new ApiResponse(
+        response,
+        `Payments filtered by doctor: ${filterPaymentsDto.doctorName}!`,
+        ApiResponseStatus.SUCCESS,
+      );
+    }
+    return new ApiResponse(
+      response,
+      `Payments filtered successfully!`,
+      ApiResponseStatus.SUCCESS,
+    );
+  }
+
+  @Get('all/main')
+  async mainGetAllPayments(
+    @Query() queryDto: MainGetAllPaymentsWithFiltersDto,
+  ) {
+    const response = await this.paymentService.MainGetAllPayments(queryDto);
+    return new ApiResponse(
+      response,
+      'Payments returned successfully!',
+      ApiResponseStatus.SUCCESS,
+    );
   }
 
   @Get()
-  findAll(@Query() paginationDto: Omit<PaginationDto, 'endDate'>) {
-    return this.paymentService.findAll(paginationDto);
+  async findAll(@Query() paginationDto: Omit<PaginationDto, 'endDate'>) {
+    const response = await this.paymentService.findAll(paginationDto);
+    return new ApiResponse(
+      response,
+      'FindAll payments executed!',
+      ApiResponseStatus.SUCCESS,
+    );
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseMongoIdPipe) id: string) {
-    return this.paymentService.findById(id);
+  async findOne(@Param('id', ParseMongoIdPipe) id: string) {
+    const response = await this.paymentService.findById(id);
+    return new ApiResponse(
+      response,
+      'Payment found!',
+      ApiResponseStatus.SUCCESS,
+    );
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id', ParseMongoIdPipe) id: string,
     @Body() codeTransactionDto: CodeTransactionDto,
   ) {
-    return this.paymentService.update(id, codeTransactionDto);
+    await this.paymentService.update(id, codeTransactionDto);
+    return new ApiResponse(
+      { id },
+      'payment updated Successfully with status and codeTransaction!',
+      ApiResponseStatus.SUCCESS,
+    );
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseMongoIdPipe) id: string) {
-    return this.paymentService.remove(id);
+  async remove(@Param('id', ParseMongoIdPipe) id: string) {
+    await this.paymentService.remove(id);
+    return new ApiResponse(
+      {},
+      'Payment removed successfully!',
+      ApiResponseStatus.SUCCESS,
+    );
   }
 
   @Delete('delete/all')
-  deleteAll() {
-    return this.paymentService.deleteAll();
+  async deleteAll() {
+    await this.paymentService.deleteAll();
+    return new ApiResponse(
+      {},
+      'all Payments deleted successfully!',
+      ApiResponseStatus.SUCCESS,
+    );
   }
 }
