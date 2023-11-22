@@ -21,7 +21,8 @@ export class CulquiController {
 
   @Post('webhook/charge/succeded')
   async webhookChargeSucceded(@Body() chargeData: any) {
-    return this.culquiService.webhookChargeSucceded(chargeData);  
+    this.culquiService.webhookChargeSucceded(chargeData);  
+    return { message: 'ok' };
   }
 
 //   @Post('tokens')

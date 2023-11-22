@@ -45,14 +45,7 @@ export class CulquiService {
   async webhookChargeSucceded(chargeData) {
     console.log('chargeData', chargeData);
     try {
-      const response = await axios.post(`${this.URI_API_CULQUI}charges`, 
-        chargeData, {
-        headers: {
-          'Authorization': `Bearer ${process.env.CULQI_PRIVATE_API_KEY}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      return response.data;
+      return chargeData;
     } catch (error) {
       console.log('error', error.response?.data || error);
       return error.response?.data || error;
