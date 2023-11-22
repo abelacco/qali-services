@@ -19,7 +19,7 @@ export class CulquiController {
     return this.culquiService.createChargeYape(chargeData);  
   }
 
-  @Post('webhook/charge/succeded')
+  @Get('webhook/charge/succeded')
   async webhookChargeSucceded(@Body() chargeData: any) {
     this.culquiService.webhookChargeSucceded(chargeData);  
     return { message: 'ok' };
