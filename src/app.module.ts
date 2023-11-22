@@ -14,6 +14,7 @@ import { AffiliateModule } from './affiliate/affiliate.module';
 import { StoreModule } from './store/store.module';
 import { ApiPeruModule } from './api-peru/api-peru.module';
 import { PaymentModule } from './payment/payment.module';
+import { CulquiModule } from './culqui/culqui.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { PaymentModule } from './payment/payment.module';
     AffiliateModule,
     ApiPeruModule,
     PaymentModule,
+    CulquiModule,
   ],
   providers: [AppService],
 })
