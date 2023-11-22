@@ -10,6 +10,7 @@ export class CulquiController {
 
   @Post('token/yape')
   async createTokenYape(@Body() userData: any) {
+    console.log('userData', userData);
     return this.culquiService.createToken(userData);  
   }
 
