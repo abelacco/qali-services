@@ -13,7 +13,7 @@ export const CalculateDate = (_date: string): CalculateDateResponse => {
   endDate.setDate(startDate.getDate() + 6);
   // Calcular el próximo viernes cercano después de endDate
   const paymentDate = new Date(endDate);
-  const daysToFriday = (8 - endDate.getDay() + 7) % 7;
+  const daysToFriday = (5 - endDate.getDay() + 7) % 7;
   paymentDate.setDate(endDate.getDate() + daysToFriday);
 
   return {
