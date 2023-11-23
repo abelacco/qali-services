@@ -21,6 +21,7 @@ export class MongoDbService implements IPaymentDao {
     try {
       const validatePayment = await this.validateCreateOne(createPayment);
       if (!validatePayment) return await this._payment.create(createPayment);
+      else return;
     } catch (error) {
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
       else throw error;
@@ -188,13 +189,13 @@ export class MongoDbService implements IPaymentDao {
 
       if (!findPayment) return false;
 
-      if (
-        findPayment &&
-        consolidate.appointmentQ !== findPayment.appointmentQ
-      ) {
-        await findPayment.updateOne({
-          appointmentQ: findPayment.appointmentQ + consolidate.appointmentQ,
-        });
+      if (findPayment) {
+        await findPayment.updateOne(
+          {
+            appointmentQ: findPayment.appointmentQ + 1,
+          },
+          { new: true },
+        );
       }
       return true;
     } catch (error) {

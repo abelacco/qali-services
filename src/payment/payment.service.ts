@@ -69,7 +69,7 @@ export class PaymentService {
 
   async createOne(createPaymentDto: CreateOnePaymentDto) {
     try {
-      const calculateDates = CalculateDate(createPaymentDto.date.toString());
+      const calculateDates = CalculateDate(createPaymentDto.date.toISOString());
       const calculatedFees = calculatePaymentFee(
         createPaymentDto.transactionBeforeFee,
       );
