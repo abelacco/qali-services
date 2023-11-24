@@ -21,6 +21,7 @@ export class MongoDbService implements IPaymentDao {
     try {
       const validatePayment = await this.validateCreateOne(createPayment);
       if (!validatePayment) return await this._payment.create(createPayment);
+      else return;
     } catch (error) {
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
       else throw error;
