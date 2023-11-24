@@ -85,7 +85,6 @@ export class AppointmentService {
         status: updateAppointmentDto.status,
         id: id,
       };
-      console.log(updateAppointmentDto);
       if (
         updateAppointmentDto.status === AppointmentStatus.CONFIRMED ||
         updateAppointmentDto.status === AppointmentStatus.CANCELED

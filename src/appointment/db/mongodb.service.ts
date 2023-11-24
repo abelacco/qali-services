@@ -104,7 +104,7 @@ export class MongoDbService implements IAppointmentDao {
       const appointment = await this._appointmentModel.findByIdAndUpdate(
         id,
         {
-          payment_date: new Date(),
+          payment_date: new Date().setHours(0, 0, 0, 0),
           ...updateAppointmentDto,
         },
         { new: true },
