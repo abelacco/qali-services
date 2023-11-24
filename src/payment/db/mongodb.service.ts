@@ -211,9 +211,11 @@ export class MongoDbService implements IPaymentDao {
   ): Promise<boolean> {
     try {
       console.log("consolidateconsolidateconsolidateconsolidateconsolidateconsolidate", consolidate)
+      const startDateTimestamp = new Date(consolidate.startDate).getTime();
+      const endDateTimestamp = new Date(consolidate.endDate).getTime();
       const findPayment = await this._payment.findOne({
-        startDate: consolidate.startDate,
-        endDate: consolidate.endDate,
+        startDate: startDateTimestamp,
+        endDate: endDateTimestamp,
         doctorId: consolidate.doctorId,
       });
       console.log("findPayment")
