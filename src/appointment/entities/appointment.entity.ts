@@ -1,10 +1,8 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { ApiProperty } from "@nestjs/swagger";
-import { Document, Types } from "mongoose";
-import { Status } from "src/common/constants";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { ApiProperty } from '@nestjs/swagger';
+import { Document, Types } from 'mongoose';
+import { AppointmentStatus } from 'src/common/constants';
 import { IsOptional } from 'class-validator';
-
-
 
 @Schema({ timestamps: true })
 export class Appointment extends Document {
@@ -22,12 +20,18 @@ export class Appointment extends Document {
   })
   patientId: string;
 
-
   @ApiProperty()
   @Prop({
     type: Date,
   })
   date: Date;
+
+  @ApiProperty()
+  @Prop({
+    type: Date,
+    default: null,
+  })
+  payment_date: Date;
 
   @ApiProperty()
   @Prop({
@@ -37,11 +41,11 @@ export class Appointment extends Document {
 
   @ApiProperty()
   @Prop({
-    type: Number,
-    enum: Status,
-    default: 0,
+    type: String,
+    enum: AppointmentStatus,
+    default: AppointmentStatus.PENDING,
   })
-  status: number;
+  status: string;
 
   @ApiProperty()
   @Prop({

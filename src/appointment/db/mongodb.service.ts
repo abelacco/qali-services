@@ -73,6 +73,7 @@ export class MongoDbService implements IAppointmentDao {
         .find()
         .populate('doctorId')
         .populate('patientId')
+        .sort({ date: 1 })
         .exec();
       return results;
     } catch (error) {
@@ -102,7 +103,11 @@ export class MongoDbService implements IAppointmentDao {
     try {
       const appointment = await this._appointmentModel.findByIdAndUpdate(
         id,
-        updateAppointmentDto,
+        {
+          payment_date: new Date(),
+          ...updateAppointmentDto,
+        },
+        { new: true },
       );
       return appointment;
     } catch (error) {

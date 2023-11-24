@@ -4,7 +4,7 @@ import { MongoDbService } from './db/mongodb.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { Appointment } from './entities/appointment.entity';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
-import { Status } from 'src/common/constants';
+import { AppointmentStatus } from 'src/common/constants';
 import { NotificationService } from 'src/notification/notification.service';
 import { StartDateDto } from 'src/common/dto';
 
@@ -58,7 +58,6 @@ export class AppointmentService {
     try {
       const appointment = await this._db.update(id, updateAppointmentDto);
       if (!appointment) throw new NotFoundException('Appointment not found');
-      let message = `Appointment ${appointment.id} updated successfully`;
 
       return appointment;
     } catch (error) {
@@ -80,7 +79,6 @@ export class AppointmentService {
     id: string,
     updateAppointmentDto: UpdateAppointmentDto,
   ) {
-    console.log('updateAndConfirmPayment');
     try {
       await this.update(id, updateAppointmentDto);
       let createNotificationDto = {
@@ -89,10 +87,9 @@ export class AppointmentService {
       };
       console.log(updateAppointmentDto);
       if (
-        updateAppointmentDto.status === Status.CONFIRMED ||
-        updateAppointmentDto.status === Status.CANCELED
+        updateAppointmentDto.status === AppointmentStatus.CONFIRMED ||
+        updateAppointmentDto.status === AppointmentStatus.CANCELED
       ) {
-        console.log('confirm payment');
         this.noficationService.confirmPayment(createNotificationDto);
       }
     } catch (error) {
