@@ -48,6 +48,26 @@ export class PaymentController {
     );
   }
 
+  @Get()
+  async findAll(@Query() paginationDto: Omit<PaginationDto, 'endDate'>) {
+    const response = await this.paymentService.findAll(paginationDto);
+    return new ApiResponse(
+      response,
+      'FindAll payments executed!',
+      ApiResponseStatus.SUCCESS,
+    );
+  }
+
+  @Get(':id')
+  async findOne(@Param('id', ParseMongoIdPipe) id: string) {
+    const response = await this.paymentService.findById(id);
+    return new ApiResponse(
+      response,
+      'Payment found!',
+      ApiResponseStatus.SUCCESS,
+    );
+  }
+
   @Get('filter')
   async filterBy(@Query() filterPaymentsDto: FilterPaymentsDto) {
     const response = await this.paymentService.filterBy(filterPaymentsDto);
@@ -73,26 +93,6 @@ export class PaymentController {
     return new ApiResponse(
       response,
       'Payments returned successfully!',
-      ApiResponseStatus.SUCCESS,
-    );
-  }
-
-  @Get()
-  async findAll(@Query() paginationDto: Omit<PaginationDto, 'endDate'>) {
-    const response = await this.paymentService.findAll(paginationDto);
-    return new ApiResponse(
-      response,
-      'FindAll payments executed!',
-      ApiResponseStatus.SUCCESS,
-    );
-  }
-
-  @Get(':id')
-  async findOne(@Param('id', ParseMongoIdPipe) id: string) {
-    const response = await this.paymentService.findById(id);
-    return new ApiResponse(
-      response,
-      'Payment found!',
       ApiResponseStatus.SUCCESS,
     );
   }

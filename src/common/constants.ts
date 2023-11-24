@@ -26,3 +26,8 @@ export enum ApiResponseStatus {
   SUCCESS = '1',
   ERROR = '2',
 }
+
+export enum ValidateConsolidateResponse {
+  UPDATED = '0',
+  NOTFOUND = '1',
+}

@@ -102,7 +102,6 @@ export class PaymentService {
   async findById(id: string) {
     try {
       const payment = await this._db.findOneByID(id);
-      if (!payment) throw new NotFoundException('Payment not found!');
       return payment;
     } catch (error) {
       throw error;
@@ -153,6 +152,7 @@ export class PaymentService {
 
   async update(id: string, codeTransaction: CodeTransactionDto) {
     try {
+      console.log(id);
       await this.findById(id);
       await this._db.updateStatus(id, codeTransaction);
     } catch (error) {

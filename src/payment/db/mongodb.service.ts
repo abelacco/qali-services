@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { IPaymentDao } from './paymentDao';
 import { InjectModel } from '@nestjs/mongoose';
 import { Payment } from '../entities/payment.entity';
@@ -6,7 +10,10 @@ import { Model, mongo } from 'mongoose';
 import { PaginationDto } from 'src/common/dto';
 import { mongoExceptionHandler } from 'src/common/mongoExceptionHandler';
 import { CodeTransactionDto, CreatePaymentDto } from '../dto';
-import { PaymentStatus } from 'src/common/constants';
+import {
+  PaymentStatus,
+  ValidateConsolidateResponse,
+} from 'src/common/constants';
 import { CalculateDate } from '../utils/helper';
 import { IFilterPaymentDb } from '../interfaces';
 
@@ -20,8 +27,8 @@ export class MongoDbService implements IPaymentDao {
   async createOnePayment(createPayment: CreatePaymentDto): Promise<Payment> {
     try {
       const validatePayment = await this.validateCreateOne(createPayment);
-      if (!validatePayment) return await this._payment.create(createPayment);
-      else return;
+      if (validatePayment === ValidateConsolidateResponse.NOTFOUND)
+        return await this._payment.create(createPayment);
     } catch (error) {
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
       else throw error;
@@ -57,7 +64,12 @@ export class MongoDbService implements IPaymentDao {
 
   async findOneByID(id: string): Promise<Payment> {
     try {
-      return await this._payment.findById(id).populate('doctorId').exec();
+      const payment: Payment = await this._payment
+        .findById(id)
+        .populate('doctorId')
+        .exec();
+      if (!payment) throw new NotFoundException('Payment not found!');
+      return payment;
     } catch (error) {
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
       else throw error;
@@ -177,40 +189,10 @@ export class MongoDbService implements IPaymentDao {
     }
   }
 
-  // private async validateCreateOne(
-  //   consolidate: CreatePaymentDto,
-  // ): Promise<boolean> {
-  //   try {
-  //     const findPayment = await this._payment.findOne({
-  //       startDate: consolidate.startDate.toString(),
-  //       endDate: consolidate.endDate.toString(),
-  //       doctorId: consolidate.doctorId,
-  //     });
-  //     console.log("findPayment", !findPayment)
-  //     if (findPayment) {
-  //       console.log("no encontre")
-  //       return false;
-  //     }
-  //     console.log("sigo aqui")
-  //     if (
-  //       findPayment &&
-  //       consolidate.appointmentQ !== findPayment.appointmentQ
-  //     ) {
-  //       await findPayment.updateOne({
-  //         appointmentQ: findPayment.appointmentQ + consolidate.appointmentQ,
-  //       });
-  //     }
-  //     return true;
-  //   } catch (error) {
-  //     if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
-  //     else throw error;
-  //   }
-  // }
   private async validateCreateOne(
     consolidate: CreatePaymentDto,
-  ): Promise<boolean> {
+  ): Promise<ValidateConsolidateResponse> {
     try {
-      console.log("consolidateconsolidateconsolidateconsolidateconsolidateconsolidate", consolidate)
       const startDateTimestamp = new Date(consolidate.startDate).getTime();
       const endDateTimestamp = new Date(consolidate.endDate).getTime();
       const findPayment = await this._payment.findOne({
@@ -218,26 +200,24 @@ export class MongoDbService implements IPaymentDao {
         endDate: endDateTimestamp,
         doctorId: consolidate.doctorId,
       });
-      console.log("findPayment")
-      console.log("findPayment", findPayment)
+
       if (findPayment) {
-        // Encontró un pago existente, verifica si necesita actualizar
-        console.log("si encontre")
-          await findPayment.updateOne({
-            appointmentQ: findPayment.appointmentQ + consolidate.appointmentQ,
+        const { modifiedCount } = await findPayment.updateOne({
+          $set: {
+            appointmentQ: findPayment.appointmentQ + 1,
+          },
         });
-        // No necesita crear uno nuevo, ya existe y se actualizó si fue necesario
-        return true;
+        if (modifiedCount) return ValidateConsolidateResponse.UPDATED;
+        else
+          throw new InternalServerErrorException(
+            'something went wrong updating this payment',
+          );
       } else {
-        // No encontró un pago existente, puede proceder a crear uno nuevo
-        // Aquí deberías agregar la lógica para crear un nuevo pago
-        // Por ejemplo: await this._payment.create(consolidate);
-        return false; // O devolver false si la creación no es parte de esta función
+        return ValidateConsolidateResponse.NOTFOUND;
       }
     } catch (error) {
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
       else throw error;
     }
   }
-  
 }
