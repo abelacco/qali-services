@@ -4,6 +4,9 @@ interface SeedDoctor {
   speciality: string;
   fee: number;
   imageUrl: string;
+  office: string;
+  modality: number[];
+
 }
 
 interface SeedPatient {
@@ -101,72 +104,94 @@ export const initialData: SeedData = {
       phone: '51947308823',
       speciality: 'Nutrición',
       fee: 150,
-      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg'
+      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg',
+      office: 'Dirección 1',
+      modality: [0, 1],
+
     },
     {
       name: 'Dr. Manuel Talledo',
       phone: '51980298900',
       speciality: 'Nutrición',
       fee: 120,
-      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg'
+      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg',
+      office: 'Dirección 2',
+      modality: [0]
     },
     {
       name: 'Dr. Sergio Talledo',
       phone: '51980827944',
       speciality: 'Nutrición',
       fee: 180,
-      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg'
+      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg',
+      office: 'Dirección 3',
+      modality: [1]
     },
     {
       name: 'Dr. Ada Lovelace',
       phone: '444-555-6666',
       speciality: 'Pediatrician',
       fee: 140,
-      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg'
+      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg',
+      office: 'Dirección 4',
+      modality: [0, 1]
     },
     {
       name: 'Dr. Grace Hopper',
       phone: '777-888-9999',
       speciality: 'Radiologist',
       fee: 170,
-      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg'
+      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg',
+      office: 'Dirección 5',
+      modality: [0, 1]
     },
     {
       name: 'Dr. Richard Feynman',
       phone: '222-333-4444',
       speciality: 'Physicist',
       fee: 165,
-      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg'
+      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg',
+      office: 'Dirección 6',
+      modality: [0]
     },
     {
       name: 'Dr. Katherine Johnson',
       phone: '555-666-7777',
       speciality: 'Gynecologist',
       fee: 155,
-      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg'
+      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg',
+      office: 'Dirección 7',
+      modality: [1]
     },
     {
       name: 'Dr. Carl Sagan',
       phone: '888-999-0000',
       speciality: 'Astronomer',
       fee: 190,
-      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg'
+      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg',
+      office: 'Dirección 8',
+      modality: [0, 1]
     },
     {
       name: 'Dr. Mary Jackson',
       phone: '999-000-1111',
       speciality: 'Endocrinologist',
       fee: 150,
-      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg'
+      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg',
+      office: 'Dirección 9',
+      modality: [0]
     },
     {
       name: 'Dr. James Clerk Maxwell',
       phone: '000-111-2222',
       speciality: 'Electromagnetism',
       fee: 160,
-      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg'
-    },
+      imageUrl: 'https://res.cloudinary.com/dbq85fwfz/image/upload/v1696427010/doctorPresentacion2_b9o0vw.jpg',
+      office: 'Dirección 10',
+      modality: [1]
+    }
   ],
+
   patient: [
     {
       name: 'Paciente 1',

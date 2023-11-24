@@ -5,17 +5,31 @@ import { Doctor } from './entities/doctor.entity';
 import { MongoDbService } from './db/mongodb.service';
 import { IDoctorDao } from './db/doctorDao';
 import { FindDoctorDto } from './dto/find-doctor.dto';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Injectable()
 export class DoctorService {
   private readonly _db: IDoctorDao;
-  constructor(readonly _mongoDbService: MongoDbService) {
+  constructor(readonly _mongoDbService: MongoDbService,
+    private readonly cloudinaryService: CloudinaryService,) {
     this._db = _mongoDbService;
   }
 
-  async addOne(createDoctorDto: CreateDoctorDto): Promise<Doctor> {
+  async addOne(createDoctorDto: CreateDoctorDto , imageFile: Express.Multer.File): Promise<Doctor> {
     try {
-      const createDoctor = this._db.create(createDoctorDto);
+          // Subir la imagen a Cloudinary y obtener la URL
+    const cloudinaryResponse = await this.cloudinaryService.uploadFile(imageFile);
+    const imageUrl = cloudinaryResponse.url;
+    console.log(imageUrl);
+    // Construir el objeto CreateDoctorDto con la URL de la imagen
+    const finalDoctorData = {
+      ...createDoctorDto,
+      imageUrl: imageUrl
+    };
+
+    // Llamar al método de la base de datos para crear el doctor
+    // return this.doctorDbService.addOne(finalDoctorData);
+      const createDoctor = this._db.create(finalDoctorData);
       return createDoctor;
     } catch (error) {
       throw error;

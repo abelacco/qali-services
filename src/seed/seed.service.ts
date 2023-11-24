@@ -24,41 +24,41 @@ export class SeedService {
   ) {}
 
   async excuteSeed() {
-    await this._appointmentModel.deleteMany({});
+    // await this._appointmentModel.deleteMany({});
     await this.doctorModel.deleteMany();
-    await this.patientModel.deleteMany();
-    await this.affiliateModel.deleteMany();
-    await this.storeModel.deleteMany();
+    // await this.patientModel.deleteMany();
+    // await this.affiliateModel.deleteMany();
+    // await this.storeModel.deleteMany();
     const data = initialData;
     // Insertar doctores y pacientes y guardar los registros creados
     const createdDoctors = await this.doctorModel.insertMany(
       initialData.doctor,
     );
-    const createdPatients = await this.patientModel.insertMany(
-      initialData.patient,
-    );
+    // const createdPatients = await this.patientModel.insertMany(
+    //   initialData.patient,
+    // );
 
-    // Insertar stores y afiliados
-    const affiliates = await this.affiliateModel.insertMany(
-      initialData.affiliate,
-    );
+    // // Insertar stores y afiliados
+    // const affiliates = await this.affiliateModel.insertMany(
+    //   initialData.affiliate,
+    // );
 
-    const storesModified = initialData.store.map((st) => ({
-      ...st,
-      affiliateId: this.getRandomItem(affiliates)._id,
-    }));
+    // const storesModified = initialData.store.map((st) => ({
+    //   ...st,
+    //   affiliateId: this.getRandomItem(affiliates)._id,
+    // }));
 
-    await this.storeModel.insertMany(storesModified);
+    // await this.storeModel.insertMany(storesModified);
 
-    // Crear citas con doctores y pacientes asignados de manera aleatoria
-    const appointments = initialData.appointment.map((app) => ({
-      ...app,
-      doctorId: this.getRandomItem(createdDoctors)._id,
-      patientId: this.getRandomItem(createdPatients)._id,
-    }));
+    // // Crear citas con doctores y pacientes asignados de manera aleatoria
+    // const appointments = initialData.appointment.map((app) => ({
+    //   ...app,
+    //   doctorId: this.getRandomItem(createdDoctors)._id,
+    //   patientId: this.getRandomItem(createdPatients)._id,
+    // }));
 
-    // Insertar las citas en la base de datos
-    await this._appointmentModel.insertMany(appointments);
+    // // Insertar las citas en la base de datos
+    // await this._appointmentModel.insertMany(appointments);
 
     return 'Seed executed';
   }
