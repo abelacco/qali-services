@@ -1,6 +1,6 @@
 import { CalculateDateResponse } from 'src/payment/interfaces';
 
-export const CalculateDate = (_date: string): CalculateDateResponse => {
+export const CalculateDate = (_date: Date): CalculateDateResponse => {
   const startDate = new Date(_date);
   if (startDate.getDay() !== 1) {
     const daysToMonday = (startDate.getDay() + 6) % 7; // Calcula los días que faltan para llegar al lunes

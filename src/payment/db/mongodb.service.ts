@@ -88,13 +88,13 @@ export class MongoDbService implements IPaymentDao {
           .exec();
       }
 
-      const thisWeek = CalculateDate(new Date().toISOString());
+      // const thisWeek = CalculateDate(new Date().toISOString());
       if (!results && doctorId) {
         results = await this._payment
           .find({
             doctorId,
-            startDate: { $gte: thisWeek.startDate },
-            endDate: { $lte: thisWeek.endDate },
+            // startDate: { $gte: thisWeek.startDate },
+            // endDate: { $lte: thisWeek.endDate },
           })
           .populate('doctorId')
           .limit(limit)
@@ -211,11 +211,11 @@ export class MongoDbService implements IPaymentDao {
   ): Promise<boolean> {
     try {
       console.log("consolidateconsolidateconsolidateconsolidateconsolidateconsolidate", consolidate)
-      const startDateTimestamp = new Date(consolidate.startDate).getTime();
-      const endDateTimestamp = new Date(consolidate.endDate).getTime();
+      // const startDateTimestamp = new Date(consolidate.startDate).getTime();
+      // const endDateTimestamp = new Date(consolidate.endDate).getTime();
       const findPayment = await this._payment.findOne({
-        startDate: startDateTimestamp,
-        endDate: endDateTimestamp,
+        startDate: consolidate.startDate,
+        endDate: consolidate.endDate,
         doctorId: consolidate.doctorId,
       });
       console.log("findPayment")

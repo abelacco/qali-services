@@ -69,7 +69,7 @@ export class PaymentService {
 
   async createOne(createPaymentDto: CreateOnePaymentDto) {
     try {
-      const calculateDates = CalculateDate(createPaymentDto.date.toISOString());
+      const calculateDates = CalculateDate(createPaymentDto.date);
       const calculatedFees = calculatePaymentFee(
         createPaymentDto.transactionBeforeFee,
       );
@@ -110,29 +110,29 @@ export class PaymentService {
   }
 
   async consolidatePaymentDoctor(startDate: StartDateDto) {
-    try {
-      if (!startDate.startDate) startDate.startDate = new Date().toISOString();
-      const dates = await CalculateDate(startDate.startDate);
-      // trae las citas de la semana especificada
-      const filteredData =
-        await this._appointmentService.FilterAppointmentsByDate({
-          startDate: dates.startDate.toISOString(),
-          endDate: dates.endDate.toISOString(),
-        });
-      // todas las citas del mismo doctor durante la semana se suman y se vuelven una para crear payments
-      const doctorsAppointments = CalculateDoctorsAppointments(filteredData);
-      const modifiedPayments: Payment[] =
-        transformIntoPayment(doctorsAppointments);
-      // //* validar payments
-      const validateConsolidates: Payment[] = await this.validateConsolidate(
-        modifiedPayments,
-      );
-      if (!validateConsolidates.length) return;
-      //* create payments
-      return await this._db.createManyPayments(validateConsolidates);
-    } catch (error) {
-      throw error;
-    }
+    // try {
+    //   if (!startDate.startDate) startDate.startDate = new Date().toISOString();
+    //   const dates = await CalculateDate(startDate.startDate);
+    //   // trae las citas de la semana especificada
+    //   const filteredData =
+    //     await this._appointmentService.FilterAppointmentsByDate({
+    //       startDate: dates.startDate.toISOString(),
+    //       endDate: dates.endDate.toISOString(),
+    //     });
+    //   // todas las citas del mismo doctor durante la semana se suman y se vuelven una para crear payments
+    //   const doctorsAppointments = CalculateDoctorsAppointments(filteredData);
+    //   const modifiedPayments: Payment[] =
+    //     transformIntoPayment(doctorsAppointments);
+    //   // //* validar payments
+    //   const validateConsolidates: Payment[] = await this.validateConsolidate(
+    //     modifiedPayments,
+    //   );
+    //   if (!validateConsolidates.length) return;
+    //   //* create payments
+    //   return await this._db.createManyPayments(validateConsolidates);
+    // } catch (error) {
+    //   throw error;
+    // }
   }
 
   async filterBy(filterPaymentDto: FilterPaymentsDto) {
