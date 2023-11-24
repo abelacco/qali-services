@@ -84,6 +84,7 @@ export class PaymentService {
         doctorEarnings: calculatedFees.doctorEarnings,
         qaliFee: calculatedFees.qaliFee,
       };
+      console.log('finalPaymentObj', finalPaymentObj);
       return await this._db.createOnePayment(finalPaymentObj);
     } catch (error) {
       throw error;
