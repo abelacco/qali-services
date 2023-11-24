@@ -216,9 +216,11 @@ export class MongoDbService implements IPaymentDao {
         endDate: consolidate.endDate.toString(),
         doctorId: consolidate.doctorId,
       });
-  
+      console.log("findPayment")
+      console.log("findPayment", findPayment)
       if (findPayment) {
         // Encontró un pago existente, verifica si necesita actualizar
+        console.log("si encontre")
           await findPayment.updateOne({
             appointmentQ: findPayment.appointmentQ + consolidate.appointmentQ,
         });
