@@ -1,11 +1,11 @@
-import { IsDate, IsObject, IsPositive, IsString, Min } from 'class-validator';
+import { IsDate, IsObject, IsOptional, IsPositive, IsString, Min } from 'class-validator';
 
 export class CreateOnePaymentDto {
   @IsDate()
   date: Date;
 
-  @IsString()
-  doctorId: string;
+  @IsOptional()
+  doctorId: any;
 
   @IsPositive()
   @Min(1)

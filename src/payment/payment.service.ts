@@ -69,9 +69,7 @@ export class PaymentService {
 
   async createOne(createPaymentDto: CreateOnePaymentDto) {
     console.log('createPaymentDto', createPaymentDto);
-    console.log('createPaymentDto', createPaymentDto.doctorId);
-   const doctorparsed = JSON.parse(createPaymentDto.doctorId);
-    console.log('doctorparsed', doctorparsed._id);
+    console.log('createPaymentDto', createPaymentDto.doctorId._id);
 
     try {
       const calculateDates = CalculateDate(createPaymentDto.date);
@@ -80,7 +78,7 @@ export class PaymentService {
       );
       const finalPaymentObj: CreatePaymentDto = {
         appointmentQ: createPaymentDto.appointmentQ,
-        doctorId: createPaymentDto.doctorId.toString(), // Convert doctorId to string
+        doctorId: createPaymentDto.doctorId._id, // Convert doctorId to string
         transactionBeforeFee: createPaymentDto.transactionBeforeFee,
         startDate: calculateDates.startDate,
         endDate: calculateDates.endDate,
