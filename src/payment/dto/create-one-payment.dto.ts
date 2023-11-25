@@ -1,4 +1,4 @@
-import { IsDate, IsPositive, IsString, Min } from 'class-validator';
+import { IsDate, IsObject, IsPositive, IsString, Min } from 'class-validator';
 
 export class CreateOnePaymentDto {
   @IsDate()
