@@ -25,6 +25,7 @@ export class NotificationService {
     const findAppointment = await this._appointmentService.getById(
       createNotificationDto.id,
     );
+
     await this._paymentService.createOne({
       appointmentQ: 1,
       date: findAppointment.createdAt,

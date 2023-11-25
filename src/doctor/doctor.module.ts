@@ -4,6 +4,7 @@ import { DoctorService } from './doctor.service';
 import { DoctorController } from './doctor.controller';
 import { Doctor, DoctorSchema } from './entities/doctor.entity';
 import { MongoDbService } from './db/mongodb.service';
+import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
 
 @Module({
   controllers: [DoctorController],
@@ -15,6 +16,7 @@ import { MongoDbService } from './db/mongodb.service';
         schema: DoctorSchema,
       },
     ]),
+    CloudinaryModule,
   ],
   exports: [MongooseModule, DoctorService],
 })

@@ -1,8 +1,8 @@
 import { CalculateDateResponse } from 'src/payment/interfaces';
 
-export const CalculateDate = (_date: string): CalculateDateResponse => {
+export const CalculateDate = (_date: Date): CalculateDateResponse => {
   const startDate = new Date(_date);
-  if (startDate.getDay() !== 0) {
+  if (startDate.getDay() !== 1) {
     const daysToMonday = (startDate.getDay() + 6) % 7; // Calcula los días que faltan para llegar al lunes
     startDate.setDate(startDate.getDate() - daysToMonday); // Resta esos días para llegar al lunes
     startDate.setHours(0, 0, 0, 0);
@@ -13,7 +13,7 @@ export const CalculateDate = (_date: string): CalculateDateResponse => {
   endDate.setDate(startDate.getDate() + 6);
   // Calcular el próximo viernes cercano después de endDate
   const paymentDate = new Date(endDate);
-  const daysToFriday = (8 - endDate.getDay() + 7) % 7;
+  const daysToFriday = (5 - endDate.getDay() + 7) % 7;
   paymentDate.setDate(endDate.getDate() + daysToFriday);
 
   return {

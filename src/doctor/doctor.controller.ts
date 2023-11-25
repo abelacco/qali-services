@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { DoctorService } from './doctor.service';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
 import { UpdateDoctorDto } from './dto/update-doctor.dto';
 import { FindDoctorDto } from './dto/find-doctor.dto';
 import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Doctor } from './entities/doctor.entity';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Doctor')
 @Controller('doctor')
@@ -12,11 +13,18 @@ export class DoctorController {
   constructor(private readonly doctorService: DoctorService) {}
 
   
+  // @Post()
+  // @ApiResponse({status: 201, description: 'Doctor was creat', type: Doctor})
+  // @ApiResponse({status: 400, description: 'Bad request'})
+  // create(@Body() createDoctorDto: CreateDoctorDto) {
+  //   return this.doctorService.addOne(createDoctorDto);
+  // }
   @Post()
-  @ApiResponse({status: 201, description: 'Doctor was creat', type: Doctor})
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiResponse({status: 201, description: 'Doctor was created', type: Doctor})
   @ApiResponse({status: 400, description: 'Bad request'})
-  create(@Body() createDoctorDto: CreateDoctorDto) {
-    return this.doctorService.addOne(createDoctorDto);
+  create(@UploadedFile() file: Express.Multer.File, @Body() createDoctorDto: CreateDoctorDto) {
+    return this.doctorService.addOne(createDoctorDto, file);
   }
 
   @Get()

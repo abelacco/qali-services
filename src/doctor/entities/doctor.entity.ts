@@ -29,11 +29,27 @@ export class Doctor extends Document {
   })
   fee: number;
 
+  @ApiProperty({ type: 'string'})
+  imageUrl: string; // Tipo 'any' para manejar el archivo de imagen
+
   @ApiProperty()
   @Prop({
     type: String,
   })
-  imageUrl: string;
+  office: string;
+
+  @ApiProperty()
+  @Prop({
+    type: [Number],
+  })
+  modality: number[];;
+
+  // @ApiProperty()
+  // @Prop({
+  //   type: String,
+  //   ref: 'Hunter',
+  // })
+  // hunter: string; ;
 }
 
 export const DoctorSchema = SchemaFactory.createForClass(Doctor);

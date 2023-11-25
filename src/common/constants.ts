@@ -12,6 +12,11 @@ export const DOCUMENT_IDENTIFIERS = {
   RUC_TYPE: 'ruc',
 };
 
+export const MODALITY = {
+  PRESENCIAL: 0,
+  VIRTUAL: 1,
+};
+
 export enum PaymentStatus {
   PENDING = '0',
   PAYED = '1',

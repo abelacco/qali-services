@@ -21,6 +21,7 @@ export class MongoDbService implements IPaymentDao {
     try {
       const validatePayment = await this.validateCreateOne(createPayment);
       if (!validatePayment) return await this._payment.create(createPayment);
+      else return;
     } catch (error) {
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
       else throw error;
@@ -87,13 +88,13 @@ export class MongoDbService implements IPaymentDao {
           .exec();
       }
 
-      const thisWeek = CalculateDate(new Date().toISOString());
+      // const thisWeek = CalculateDate(new Date().toISOString());
       if (!results && doctorId) {
         results = await this._payment
           .find({
             doctorId,
-            startDate: { $gte: thisWeek.startDate },
-            endDate: { $lte: thisWeek.endDate },
+            // startDate: { $gte: thisWeek.startDate },
+            // endDate: { $lte: thisWeek.endDate },
           })
           .populate('doctorId')
           .limit(limit)
@@ -176,30 +177,67 @@ export class MongoDbService implements IPaymentDao {
     }
   }
 
+  // private async validateCreateOne(
+  //   consolidate: CreatePaymentDto,
+  // ): Promise<boolean> {
+  //   try {
+  //     const findPayment = await this._payment.findOne({
+  //       startDate: consolidate.startDate.toString(),
+  //       endDate: consolidate.endDate.toString(),
+  //       doctorId: consolidate.doctorId,
+  //     });
+  //     console.log("findPayment", !findPayment)
+  //     if (findPayment) {
+  //       console.log("no encontre")
+  //       return false;
+  //     }
+  //     console.log("sigo aqui")
+  //     if (
+  //       findPayment &&
+  //       consolidate.appointmentQ !== findPayment.appointmentQ
+  //     ) {
+  //       await findPayment.updateOne({
+  //         appointmentQ: findPayment.appointmentQ + consolidate.appointmentQ,
+  //       });
+  //     }
+  //     return true;
+  //   } catch (error) {
+  //     if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
+  //     else throw error;
+  //   }
+  // }
   private async validateCreateOne(
     consolidate: CreatePaymentDto,
   ): Promise<boolean> {
     try {
+      console.log("consolidateconsolidateconsolidateconsolidateconsolidateconsolidate", consolidate)
+      // const startDateTimestamp = new Date(consolidate.startDate).getTime();
+      // const endDateTimestamp = new Date(consolidate.endDate).getTime();
       const findPayment = await this._payment.findOne({
-        startDate: consolidate.startDate.toString(),
-        endDate: consolidate.endDate.toString(),
+        startDate: consolidate.startDate,
+        endDate: consolidate.endDate,
         doctorId: consolidate.doctorId,
       });
-
-      if (!findPayment) return false;
-
-      if (
-        findPayment &&
-        consolidate.appointmentQ !== findPayment.appointmentQ
-      ) {
-        await findPayment.updateOne({
-          appointmentQ: findPayment.appointmentQ + consolidate.appointmentQ,
+      console.log("findPayment")
+      console.log("findPayment", findPayment)
+      if (findPayment) {
+        // Encontró un pago existente, verifica si necesita actualizar
+        console.log("si encontre")
+          await findPayment.updateOne({
+            appointmentQ: findPayment.appointmentQ + consolidate.appointmentQ,
         });
+        // No necesita crear uno nuevo, ya existe y se actualizó si fue necesario
+        return true;
+      } else {
+        // No encontró un pago existente, puede proceder a crear uno nuevo
+        // Aquí deberías agregar la lógica para crear un nuevo pago
+        // Por ejemplo: await this._payment.create(consolidate);
+        return false; // O devolver false si la creación no es parte de esta función
       }
-      return true;
     } catch (error) {
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
       else throw error;
     }
   }
+  
 }

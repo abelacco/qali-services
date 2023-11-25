@@ -17,6 +17,7 @@ export class MongoDbService implements IDoctorDao {
   async create(createDoctorDto: CreateDoctorDto): Promise<Doctor> {
     try {
       const createDoctor = new this._doctorModel(createDoctorDto);
+      console.log(createDoctor);
       await createDoctor.save();
       return createDoctor;
     } catch (error) {

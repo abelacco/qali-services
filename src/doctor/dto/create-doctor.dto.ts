@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsArray, IsIn, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { MODALITY } from "src/common/constants";
 
 export class CreateDoctorDto {
 
@@ -22,4 +23,19 @@ export class CreateDoctorDto {
   @IsNumber()
   @IsNotEmpty()
   fee: number;
+
+  @ApiProperty({ type: [Number] })
+  @IsNotEmpty()
+  @IsArray()
+  // @IsIn([MODALITY.PRESENCIAL, MODALITY.VIRTUAL], { each: true })
+  modality: number[];
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  office: string;
+
+  @ApiProperty()
+  @IsOptional()
+  imageUrl?: string;
 }
