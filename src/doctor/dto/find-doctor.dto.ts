@@ -13,4 +13,10 @@ export class FindDoctorDto extends PaginationDto {
   @IsString()
   @IsOptional()
   name: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  speciality: string;
+
 }
