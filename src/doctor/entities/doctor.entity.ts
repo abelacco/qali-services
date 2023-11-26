@@ -30,6 +30,9 @@ export class Doctor extends Document {
   fee: number;
 
   @ApiProperty({ type: 'string'})
+  @Prop({
+    type: String,
+  })
   imageUrl: string; // Tipo 'any' para manejar el archivo de imagen
 
   @ApiProperty()

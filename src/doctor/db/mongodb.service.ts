@@ -7,6 +7,7 @@ import { Doctor } from '../entities/doctor.entity';
 import { CreateDoctorDto } from '../dto/create-doctor.dto';
 import { UpdateDoctorDto } from '../dto/update-doctor.dto';
 import { FindDoctorDto } from '../dto/find-doctor.dto';
+import { Pagination } from 'src/common/models/pagination';
 
 @Injectable()
 export class MongoDbService implements IDoctorDao {
@@ -17,7 +18,6 @@ export class MongoDbService implements IDoctorDao {
   async create(createDoctorDto: CreateDoctorDto): Promise<Doctor> {
     try {
       const createDoctor = new this._doctorModel(createDoctorDto);
-      console.log(createDoctor);
       await createDoctor.save();
       return createDoctor;
     } catch (error) {
@@ -26,15 +26,63 @@ export class MongoDbService implements IDoctorDao {
     }
   }
 
-  async findAll(props?: FindDoctorDto): Promise<Array<Doctor>> {
+  async findAll(findDoctorDto: FindDoctorDto): Promise<{ data: Doctor[], total: number }> {
     try {
-      const results = await this._doctorModel.find(props);
-      return results;
+      // Construir el objeto de consulta
+      const query = {};
+      if (findDoctorDto.phone) {
+        query['phone'] = { $regex: findDoctorDto.phone, $options: 'i' }; // Búsqueda insensible a mayúsculas/minúsculas
+      }
+      if (findDoctorDto.name) {
+        query['name'] = { $regex: findDoctorDto.name, $options: 'i' }; // Búsqueda insensible a mayúsculas/minúsculas
+      }
+  
+      // Aplicar paginación
+      const limit = findDoctorDto.limit || 10; // Valor por defecto si no se proporciona
+      const offset = findDoctorDto.offset || 0;
+  
+      // Realizar la consulta con filtros y paginación
+      const data = await this._doctorModel.find(query).limit(limit).skip(offset);
+  
+      // Obtener el conteo total de documentos que coinciden con los criterios de búsqueda
+      const total = await this._doctorModel.countDocuments(query);
+  
+      return new Pagination<Doctor>(data, total, offset, limit);
     } catch (error) {
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
       else throw error;
     }
   }
+
+  async findAllByPagination(findDoctorDto: FindDoctorDto): Promise<{data: Doctor[] ; total:number}> {
+    try {
+      // Construir el objeto de consulta
+      const query = {};
+      if (findDoctorDto.phone) {
+        query['phone'] = { $regex: findDoctorDto.phone, $options: 'i' }; // Búsqueda insensible a mayúsculas/minúsculas
+      }
+      if (findDoctorDto.name) {
+        query['name'] = { $regex: findDoctorDto.name, $options: 'i' }; // Búsqueda insensible a mayúsculas/minúsculas
+      }
+  
+      // Aplicar paginación
+      const limit = findDoctorDto.limit || 10; // Valor por defecto si no se proporciona
+      const offset = findDoctorDto.offset || 0;
+  
+      // Realizar la consulta con filtros y paginación
+      const data = await this._doctorModel.find(query).limit(limit).skip(offset);
+  
+      // Obtener el conteo total de documentos que coinciden con los criterios de búsqueda
+      const total = await this._doctorModel.countDocuments(query);
+  
+      return {data, total};
+    } catch (error) {
+      if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
+      else throw error;
+    }
+  }
+  
+  
 
   async findByName(name: string): Promise<Doctor> {
     try {

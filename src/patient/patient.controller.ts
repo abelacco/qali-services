@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Logger } from '@nestjs/common';
 import { PatientService } from './patient.service';
 import { CreatePatientDto , UpdatePatientDto , findCreatePatientDto} from './dto';
-import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Patient } from './entities/patient.entity';
 
 @ApiTags('Parient')
@@ -44,6 +44,19 @@ export class PatientController {
   update(@Param('id') id: string, @Body() updatePatientDto: UpdatePatientDto) {
     return this.patientService.update(id, updatePatientDto);
   }
+
+  @Patch('')
+  @ApiQuery({
+    name: 'phone',
+    required: true,
+    type: String,
+    description: 'Número de teléfono del paciente'
+  })
+  updateByPhone(@Query('phone') phone: string, @Body() updatePatientDto: UpdatePatientDto) {
+    return this.patientService.updateByPhone(phone, updatePatientDto);
+  }
+
+  
 
   @Delete(':id')
   @ApiParam({

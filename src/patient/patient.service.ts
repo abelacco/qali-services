@@ -73,6 +73,24 @@ export class PatientService {
     }
   }
 
+  async updateByPhone(
+    phone: string,
+    updatePatientDto: UpdatePatientDto,
+  ): Promise<string> {
+    try {
+      const patient = await this.getByPhone(phone);
+      console.log('patient', patient)
+      this.update(patient.id, updatePatientDto)
+      // const patient = await this._db.update(
+      //   phone,
+      //   updatePatientDto,
+      // );
+      return `Patient ${patient.name} updated successfully`;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async remove(id: string): Promise<string> {
     try {
       const patient = await this._db.remove(id);

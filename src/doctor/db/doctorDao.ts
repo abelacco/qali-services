@@ -6,7 +6,9 @@ import { Doctor } from '../entities/doctor.entity';
 export interface IDoctorDao {
   create(createDoctoDto: CreateDoctorDto): Promise<Doctor>;
 
-  findAll(props?: FindDoctorDto): Promise<Array<Doctor>>;
+  findAll(findDoctorDto: FindDoctorDto): Promise<{ data: Doctor[]; total: number }>;
+  
+  findAllByPagination(findDoctorDto: FindDoctorDto): Promise<{ data: Doctor[]; total: number }>;
 
   findById(id: string): Promise<Doctor>;
 

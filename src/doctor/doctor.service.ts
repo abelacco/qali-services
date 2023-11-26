@@ -6,6 +6,7 @@ import { MongoDbService } from './db/mongodb.service';
 import { IDoctorDao } from './db/doctorDao';
 import { FindDoctorDto } from './dto/find-doctor.dto';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { Pagination } from 'src/common/models/pagination';
 
 @Injectable()
 export class DoctorService {
@@ -17,7 +18,7 @@ export class DoctorService {
 
   async addOne(createDoctorDto: CreateDoctorDto , imageFile: Express.Multer.File): Promise<Doctor> {
     try {
-          // Subir la imagen a Cloudinary y obtener la URL
+    // Subir la imagen a Cloudinary y obtener la URL
     const cloudinaryResponse = await this.cloudinaryService.uploadFile(imageFile);
     const imageUrl = cloudinaryResponse.url;
     console.log(imageUrl);
@@ -26,10 +27,11 @@ export class DoctorService {
       ...createDoctorDto,
       imageUrl: imageUrl
     };
-
+    console.log("finalDoctorData with imageUrl",finalDoctorData);
     // Llamar al método de la base de datos para crear el doctor
     // return this.doctorDbService.addOne(finalDoctorData);
-      const createDoctor = this._db.create(finalDoctorData);
+      const createDoctor = await this._db.create(finalDoctorData);
+      console.log("return from service createdoctor",createDoctor);
       return createDoctor;
     } catch (error) {
       throw error;
@@ -39,8 +41,19 @@ export class DoctorService {
   async getAll(props?: FindDoctorDto): Promise<Array<Doctor>> {
     try {
       const results = await this._db.findAll(props);
-      if (!results) throw new NotFoundException('Could not find any doctor');
-      return results;
+      if (results.total === 0) throw new NotFoundException('No existen doctores con esa coincidencia');
+      return results.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getAllByPagination(props?: FindDoctorDto): Promise<Pagination<Doctor>> {
+    try {
+      const result = await this._db.findAllByPagination(props);
+      if (result.total === 0) throw new NotFoundException('No existen doctores con esa coincidencia');
+      const responsePagination = new Pagination<Doctor>(result.data, result.total, props.offset, props.limit);
+      return responsePagination;
     } catch (error) {
       throw error;
     }

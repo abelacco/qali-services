@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
+import { PaginationDto } from 'src/common/dto';
 
-export class FindDoctorDto {
+export class FindDoctorDto extends PaginationDto {
 
   @ApiProperty()
   @IsString()
@@ -11,5 +12,5 @@ export class FindDoctorDto {
   @ApiProperty()
   @IsString()
   @IsOptional()
-  speciality: string;
+  name: string;
 }
