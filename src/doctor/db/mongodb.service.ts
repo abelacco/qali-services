@@ -26,28 +26,35 @@ export class MongoDbService implements IDoctorDao {
     }
   }
 
-  async findAll(findDoctorDto: FindDoctorDto): Promise<{ data: Doctor[], total: number }> {
+  async findAll(props?: FindDoctorDto): Promise<Array<Doctor>> {
+    // try {
+    //   // Construir el objeto de consulta
+    //   const query = {};
+    //   if (findDoctorDto.phone) {
+    //     query['phone'] = { $regex: findDoctorDto.phone, $options: 'i' }; // Búsqueda insensible a mayúsculas/minúsculas
+    //   }
+    //   if (findDoctorDto.name) {
+    //     query['name'] = { $regex: findDoctorDto.name, $options: 'i' }; // Búsqueda insensible a mayúsculas/minúsculas
+    //   }
+  
+    //   // Aplicar paginación
+    //   const limit = findDoctorDto.limit || 10; // Valor por defecto si no se proporciona
+    //   const offset = findDoctorDto.offset || 0;
+  
+    //   // Realizar la consulta con filtros y paginación
+    //   const data = await this._doctorModel.find(query).limit(limit).skip(offset);
+  
+    //   // Obtener el conteo total de documentos que coinciden con los criterios de búsqueda
+    //   const total = await this._doctorModel.countDocuments(query);
+  
+    //   return new Pagination<Doctor>(data, total, offset, limit);
+    // } catch (error) {
+    //   if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
+    //   else throw error;
+    // }
     try {
-      // Construir el objeto de consulta
-      const query = {};
-      if (findDoctorDto.phone) {
-        query['phone'] = { $regex: findDoctorDto.phone, $options: 'i' }; // Búsqueda insensible a mayúsculas/minúsculas
-      }
-      if (findDoctorDto.name) {
-        query['name'] = { $regex: findDoctorDto.name, $options: 'i' }; // Búsqueda insensible a mayúsculas/minúsculas
-      }
-  
-      // Aplicar paginación
-      const limit = findDoctorDto.limit || 10; // Valor por defecto si no se proporciona
-      const offset = findDoctorDto.offset || 0;
-  
-      // Realizar la consulta con filtros y paginación
-      const data = await this._doctorModel.find(query).limit(limit).skip(offset);
-  
-      // Obtener el conteo total de documentos que coinciden con los criterios de búsqueda
-      const total = await this._doctorModel.countDocuments(query);
-  
-      return new Pagination<Doctor>(data, total, offset, limit);
+      const results = await this._doctorModel.find(props);
+      return results;
     } catch (error) {
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
       else throw error;

@@ -41,8 +41,8 @@ export class DoctorService {
   async getAll(props?: FindDoctorDto): Promise<Array<Doctor>> {
     try {
       const results = await this._db.findAll(props);
-      if (results.total === 0) throw new NotFoundException('No existen doctores con esa coincidencia');
-      return results.data;
+      if (!results) throw new NotFoundException('Could not find any doctor');
+      return results;
     } catch (error) {
       throw error;
     }

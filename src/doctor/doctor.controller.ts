@@ -32,19 +32,20 @@ export class DoctorController {
 
   @Get()
   async findAll(@Query() props?: FindDoctorDto) {
-    try {
-      const result = await this.doctorService.getAll(props);
+    return this.doctorService.getAll(props);
+    // try {
+    //   const result = await this.doctorService.getAll(props);
       
-      // Retorna directamente el resultado en el constructor de ApiResponseModel
-      return new ApiResponseModel(
-        result, 
-        'Operación exitosa', 
-        ApiResponseStatus.SUCCESS
-      );
-    } catch (error) {
-      // Maneja el error, devolviendo una respuesta de error
-      return new ApiResponseModel(null, 'Error al obtener los doctores', ApiResponseStatus.ERROR);
-    }
+    //   // Retorna directamente el resultado en el constructor de ApiResponseModel
+    //   return new ApiResponseModel(
+    //     result, 
+    //     'Operación exitosa', 
+    //     ApiResponseStatus.SUCCESS
+    //   );
+    // } catch (error) {
+    //   // Maneja el error, devolviendo una respuesta de error
+    //   return new ApiResponseModel(null, 'Error al obtener los doctores', ApiResponseStatus.ERROR);
+    // }
   }
 
   @Get('paginate')
