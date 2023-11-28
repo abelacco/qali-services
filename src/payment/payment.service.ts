@@ -69,10 +69,13 @@ export class PaymentService {
 
   async createOne(createPaymentDto: CreateOnePaymentDto) {
     try {
+      const doctor = await this._doctorService.getById(createPaymentDto.doctorId);
       const calculateDates = CalculateDate(createPaymentDto.date);
-      const calculatedFees = calculatePaymentFee(
-        createPaymentDto.transactionBeforeFee,
-      );
+      const calculatedFees = calculatePaymentFee({
+        total: createPaymentDto.transactionBeforeFee,
+        comission: doctor.qaliComission
+      });
+
       const finalPaymentObj: CreatePaymentDto = {
         appointmentQ: createPaymentDto.appointmentQ,
         doctorId: createPaymentDto.doctorId,
