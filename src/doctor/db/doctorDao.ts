@@ -7,6 +7,8 @@ export interface IDoctorDao {
   create(createDoctoDto: CreateDoctorDto): Promise<Doctor>;
 
   findAll(props?: FindDoctorDto): Promise<Array<Doctor>>;
+    
+  findAllByPagination(findDoctorDto: FindDoctorDto): Promise<{ data: Doctor[]; total: number }>;
 
   findById(id: string): Promise<Doctor>;
 

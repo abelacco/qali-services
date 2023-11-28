@@ -37,5 +37,6 @@ export class CreateDoctorDto {
 
   @ApiProperty()
   @IsOptional()
+  @IsString()
   imageUrl?: string;
 }
