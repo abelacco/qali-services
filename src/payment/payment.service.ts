@@ -68,9 +68,6 @@ export class PaymentService {
   }
 
   async createOne(createPaymentDto: CreateOnePaymentDto) {
-    console.log('Iniciando Consolidacion');
-
-
     try {
       const calculateDates = CalculateDate(createPaymentDto.date);
       const calculatedFees = calculatePaymentFee(
@@ -78,7 +75,7 @@ export class PaymentService {
       );
       const finalPaymentObj: CreatePaymentDto = {
         appointmentQ: createPaymentDto.appointmentQ,
-        doctorId: createPaymentDto.doctorId._id, // Convert doctorId to string
+        doctorId: createPaymentDto.doctorId,
         transactionBeforeFee: createPaymentDto.transactionBeforeFee,
         startDate: calculateDates.startDate,
         endDate: calculateDates.endDate,
@@ -86,7 +83,7 @@ export class PaymentService {
         doctorEarnings: calculatedFees.doctorEarnings,
         qaliFee: calculatedFees.qaliFee,
       };
-      console.log('crear o actualizar consolidado inicio');
+
       return await this._db.createOnePayment(finalPaymentObj);
     } catch (error) {
       throw error;

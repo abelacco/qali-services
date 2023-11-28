@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, NotImplementedException } from '@nestjs/common';
 import { IPaymentDao } from './paymentDao';
 import { InjectModel } from '@nestjs/mongoose';
 import { Payment } from '../entities/payment.entity';
@@ -19,9 +19,10 @@ export class MongoDbService implements IPaymentDao {
 
   async createOnePayment(createPayment: CreatePaymentDto): Promise<Payment> {
     try {
-      const validatePayment = await this.validateCreateOne(createPayment);
-      if (!validatePayment) return await this._payment.create(createPayment);
-      else return;
+      const paymentExists = await this.validateCreateOne(createPayment);
+      if (paymentExists) return paymentExists;
+
+      return await this._payment.create(createPayment);
     } catch (error) {
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
       else throw error;
@@ -206,34 +207,48 @@ export class MongoDbService implements IPaymentDao {
   //     else throw error;
   //   }
   // }
-  private async validateCreateOne(
-    consolidate: CreatePaymentDto,
-  ): Promise<boolean> {
+
+  public async findOneByDateRangeAndDoctorId({ startDate, endDate, doctorId }: { startDate: Date, endDate: Date, doctorId: string }) {
     try {
-      console.log("consolidateconsolidateconsolidateconsolidateconsolidateconsolidate", consolidate)
+      const payment = await this._payment.findOne({
+        startDate,
+        endDate,
+        doctorId
+      });
+
+      return payment;
+    } catch (error) {
+      if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
+      else throw error;
+    }
+  }
+
+  private async validateCreateOne(consolidate: CreatePaymentDto): Promise<Payment> {
+    try {
       // const startDateTimestamp = new Date(consolidate.startDate).getTime();
       // const endDateTimestamp = new Date(consolidate.endDate).getTime();
-      const findPayment = await this._payment.findOne({
+
+      const payment = await this.findOneByDateRangeAndDoctorId({
         startDate: consolidate.startDate,
         endDate: consolidate.endDate,
-        doctorId: consolidate.doctorId,
+        doctorId: consolidate.doctorId
       });
-      console.log("findPayment")
-      console.log("findPayment", findPayment)
-      if (findPayment) {
-        // Encontró un pago existente, verifica si necesita actualizar
-        console.log("si encontre")
-          await findPayment.updateOne({
-            appointmentQ: findPayment.appointmentQ + consolidate.appointmentQ,
-        });
-        // No necesita crear uno nuevo, ya existe y se actualizó si fue necesario
-        return true;
-      } else {
-        // No encontró un pago existente, puede proceder a crear uno nuevo
-        // Aquí deberías agregar la lógica para crear un nuevo pago
-        // Por ejemplo: await this._payment.create(consolidate);
-        return false; // O devolver false si la creación no es parte de esta función
-      }
+
+      if (!payment) return null;
+
+      const paymentUpdated = await payment.updateOne({
+        appointmentQ: payment.appointmentQ + consolidate.appointmentQ,
+        doctorEarnings: payment.doctorEarnings + consolidate.doctorEarnings,
+        qaliFee: payment.qaliFee + consolidate.qaliFee
+      });
+
+      if (paymentUpdated.modifiedCount === 0) throw new NotImplementedException('Ocurrio un error al actualizar el registro del payment, intentalo de nuevo');
+
+      return await this.findOneByDateRangeAndDoctorId({
+        startDate: payment.startDate,
+        endDate: payment.endDate,
+        doctorId: payment.doctorId
+      });
     } catch (error) {
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
       else throw error;
