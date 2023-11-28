@@ -210,21 +210,23 @@ export class MongoDbService implements IPaymentDao {
     consolidate: CreatePaymentDto,
   ): Promise<boolean> {
     try {
-      console.log("consolidateconsolidateconsolidateconsolidateconsolidateconsolidate", consolidate)
-      // const startDateTimestamp = new Date(consolidate.startDate).getTime();
-      // const endDateTimestamp = new Date(consolidate.endDate).getTime();
+
       const findPayment = await this._payment.findOne({
         startDate: consolidate.startDate,
         endDate: consolidate.endDate,
         doctorId: consolidate.doctorId,
       });
-      console.log("findPayment")
       console.log("findPayment", findPayment)
       if (findPayment) {
-        // Encontró un pago existente, verifica si necesita actualizar
+        // Encontró un pago existente, lo actualiza
+        const appointmentQtotal = findPayment.appointmentQ + consolidate.appointmentQ
+        const doctorEarningstotal = consolidate.doctorEarnings*appointmentQtotal
+        const qaliFeeTotal = consolidate.qaliFee*appointmentQtotal
         console.log("si encontre")
           await findPayment.updateOne({
             appointmentQ: findPayment.appointmentQ + consolidate.appointmentQ,
+            doctorEarnings: doctorEarningstotal,
+            qaliFee: qaliFeeTotal,
         });
         // No necesita crear uno nuevo, ya existe y se actualizó si fue necesario
         return true;
