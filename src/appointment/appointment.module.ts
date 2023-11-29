@@ -14,7 +14,7 @@ import { NotificationModule } from 'src/notification/notification.module';
     forwardRef(() => NotificationModule),
   ],
   controllers: [AppointmentController],
-  providers: [AppointmentService, MongoDbService],
+  providers: [AppointmentService, MongoDbService, ],
   exports: [MongooseModule, AppointmentService],
 })
 export class AppointmentModule {}

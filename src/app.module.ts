@@ -15,6 +15,7 @@ import { StoreModule } from './store/store.module';
 import { ApiPeruModule } from './api-peru/api-peru.module';
 import { PaymentModule } from './payment/payment.module';
 import { CulquiModule } from './culqui/culqui.module';
+import { MessagesWsModule } from './messages-ws/messages-ws.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { CulquiModule } from './culqui/culqui.module';
     ApiPeruModule,
     PaymentModule,
     CulquiModule,
+    MessagesWsModule,
   ],
   providers: [AppService],
 })
