@@ -7,6 +7,8 @@ import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 import { Status } from 'src/common/constants';
 import { NotificationService } from 'src/notification/notification.service';
 import { StartDateDto } from 'src/common/dto';
+import { FilterAppointmentDto } from './dto/filter-appointment.dto';
+import { Pagination } from 'src/common/models/pagination';
 
 @Injectable()
 export class AppointmentService {
@@ -36,6 +38,14 @@ export class AppointmentService {
       if (!results)
         throw new NotFoundException('Could not find any appointment');
       return results;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async filterAppointments(query: FilterAppointmentDto): Promise<Pagination<Appointment>> {
+    try {
+      return this._db.filter(query);
     } catch (error) {
       throw error;
     }
