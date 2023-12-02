@@ -5,6 +5,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Appointment, AppointmentSchema } from './entities/appointment.entity';
 import { MongoDbService } from './db/mongodb.service';
 import { NotificationModule } from 'src/notification/notification.module';
+import { DoctorModule } from 'src/doctor/doctor.module';
+import { PatientModule } from 'src/patient/patient.module';
 
 @Module({
   imports: [
@@ -12,6 +14,8 @@ import { NotificationModule } from 'src/notification/notification.module';
       { name: Appointment.name, schema: AppointmentSchema },
     ]),
     forwardRef(() => NotificationModule),
+    DoctorModule,
+    PatientModule
   ],
   controllers: [AppointmentController],
   providers: [AppointmentService, MongoDbService],
