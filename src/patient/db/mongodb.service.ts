@@ -6,6 +6,9 @@ import { Patient } from "../entities/patient.entity";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, mongo } from "mongoose";
 import { mongoExceptionHandler } from "src/common/mongoExceptionHandler";
+import { FilterPatientDto } from "../dto/filter-patient.dto";
+import { Pagination } from "src/common/models/pagination";
+import { FindOnePatientDto } from "../dto/find-one-patient.dto";
 
 @Injectable()
 export class MongoDbService implements IPatientDao {
@@ -34,10 +37,46 @@ export class MongoDbService implements IPatientDao {
       else throw error;
     }
   }
-
-  async findById(id: string): Promise<Patient> {
+  
+  async filterMany(query: FilterPatientDto): Promise<Pagination<Patient>> {
     try {
-      const patient = await this._patientModel.findById(id);
+      let filters: any = query;
+
+      if (query.name) {
+        filters['name'] = { $regex: query.name, $options: 'i' };
+      }
+
+      const limit = query.limit || 10;
+      const offset = query.offset || 0;
+
+      delete filters['limit'];
+      delete filters['offset'];
+
+      const data = await this._patientModel
+        .find(filters)
+        .limit(limit)
+        .skip(offset)
+        .exec();
+
+      return new Pagination<Patient>(data, data.length, offset, limit);
+    } catch (error) {
+      if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
+      else throw error;
+    }
+  }
+
+  async findOneById(id: string): Promise<Patient> {
+    try {
+      return this._patientModel.findById(id);
+    } catch (error) {
+      if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
+      else throw error;
+    }
+  }
+
+  async findOneByParam(param: FindOnePatientDto): Promise<Patient> {
+    try {
+      const patient = await this._patientModel.findOne(param);
       return patient;
     } catch (error) {
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);

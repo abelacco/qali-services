@@ -3,6 +3,10 @@ import { PatientService } from './patient.service';
 import { CreatePatientDto , UpdatePatientDto , findCreatePatientDto} from './dto';
 import { ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Patient } from './entities/patient.entity';
+import { FindOnePatientDto } from './dto/find-one-patient.dto';
+import { FilterPatientDto } from './dto/filter-patient.dto';
+import { ApiResponse as ApiResponseModel } from 'src/common/models/api-response';
+import { ApiResponseStatus } from 'src/common/constants';
 
 @ApiTags('Parient')
 @Controller('patient')
@@ -21,20 +25,39 @@ export class PatientController {
     return this.patientService.getAll();
   }
 
-
-
   @Get('findorcreate')
   findOrCreate(@Query() findCreatePatientDto: findCreatePatientDto) {
     Logger.log('findOrCreate controller')
     return this.patientService.findOrCreatePatient(findCreatePatientDto);
   }
 
+  @Get('param')
+  findOneByParam(@Query() param: FindOnePatientDto) {
+    return this.patientService.getOneByParam(param);
+  }
+
+  @Get('filter')
+  async filterManyByQuery(@Query() query: FilterPatientDto) {
+    try {
+      const response = await this.patientService.filterMany(query);
+
+      return new ApiResponseModel(
+        response,
+        'Operacion exitosa',
+        ApiResponseStatus.SUCCESS
+      );
+    } catch (error) {
+      return new ApiResponseModel(
+        null,
+        'Error al filtrar los patients',
+        ApiResponseStatus.ERROR
+      );
+    }
+  }
+
   @Get(':id')
-  @ApiParam({
-    name: 'id'
-  })
-  findOne(@Param('id') id: string) {
-    return this.patientService.getById(id);
+  findOneById(@Param('id') id: string) {
+    return this.patientService.genOneById(id);
   }
 
   @Patch(':id')
@@ -55,8 +78,6 @@ export class PatientController {
   updateByPhone(@Query('phone') phone: string, @Body() updatePatientDto: UpdatePatientDto) {
     return this.patientService.updateByPhone(phone, updatePatientDto);
   }
-
-  
 
   @Delete(':id')
   @ApiParam({
