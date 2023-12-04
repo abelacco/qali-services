@@ -53,7 +53,23 @@ export class MongoDbService implements IDoctorDao {
     //   else throw error;
     // }
     try {
-      const results = await this._doctorModel.find(props);
+      const QUERY = {};
+
+      if(props.name) {
+        QUERY["name"] = { $regex: props.name, $options: 'i' };
+      }
+
+      if(props.speciality) {
+        QUERY["speciality"] = { $regex: props.speciality, $options: 'i' };
+      }
+      console.log(props.modality)
+      if(!isNaN(props.modality)) {
+        QUERY["modality"] = props.modality;
+      }
+
+      console.log("compare", props, QUERY)
+
+      const results = await this._doctorModel.find(QUERY);
       return results;
     } catch (error) {
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
