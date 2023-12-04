@@ -39,4 +39,9 @@ export class CreateDoctorDto {
   @IsOptional()
   @IsString()
   imageUrl?: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsNumber()
+  qaliComission?: number;
 }
