@@ -71,9 +71,8 @@ export class PaymentService {
       const calculateDates = CalculateDate(createPaymentDto.date);
       const calculatedFees = calculatePaymentFee({
         total: createPaymentDto.transactionBeforeFee,
-        comission: doctor.qaliComission
+        comission: createPaymentDto.doctorId.qaliComission
       });
-
       const finalPaymentObj: CreatePaymentDto = {
         appointmentQ: createPaymentDto.appointmentQ,
         doctorId: createPaymentDto.doctorId,
