@@ -5,16 +5,19 @@ import { Payment } from '../entities/payment.entity';
 import { Model, mongo } from 'mongoose';
 import { PaginationDto } from 'src/common/dto';
 import { mongoExceptionHandler } from 'src/common/mongoExceptionHandler';
-import { CodeTransactionDto, CreatePaymentDto } from '../dto';
+import { CodeTransactionDto, CreatePaymentDto, FilterPaymentsDto } from '../dto';
 import { PaymentStatus } from 'src/common/constants';
 import { CalculateDate } from '../utils/helper';
 import { IFilterPaymentDb } from '../interfaces';
+import { FindDoctorDto } from 'src/doctor/dto';
+import { DoctorService } from 'src/doctor/doctor.service';
 
 @Injectable()
 export class MongoDbService implements IPaymentDao {
   constructor(
     @InjectModel(Payment.name)
     private readonly _payment: Model<Payment>,
+    private readonly _doctorService: DoctorService
   ) {}
 
   async createOnePayment(createPayment: CreatePaymentDto): Promise<Payment> {
@@ -65,55 +68,52 @@ export class MongoDbService implements IPaymentDao {
     }
   }
 
-  async filterBy(filterPaymentData: IFilterPaymentDb): Promise<Payment[]> {
+  async filterBy(query: FilterPaymentsDto): Promise<Payment[]> {
     try {
       const {
+        doctorName,
         startDate,
-        endDate,
-        doctorId,
+        paymentDate,
         status,
-        limit = 0,
+        limit = 10,
         offset = 0,
-      } = filterPaymentData;
-      let results: Payment[];
+      } = query;
 
-      if (startDate && endDate) {
-        results = await this._payment
-          .find({
-            startDate: { $gte: startDate },
-            endDate: { $lte: endDate },
-          })
-          .populate('doctorId')
-          .limit(limit)
-          .skip(offset)
-          .exec();
+      let filters: any = {};
+
+      if (status !== null && status !== undefined) {
+        filters['status'] = status;
       }
 
-      // const thisWeek = CalculateDate(new Date().toISOString());
-      if (!results && doctorId) {
-        results = await this._payment
-          .find({
-            doctorId,
-            // startDate: { $gte: thisWeek.startDate },
-            // endDate: { $lte: thisWeek.endDate },
-          })
-          .populate('doctorId')
-          .limit(limit)
-          .skip(offset)
-          .exec();
+      if (startDate) {
+        filters['startDate'] = {
+          $gte: new Date(`${startDate}T00:00:00.000Z`),
+          $lte: new Date(`${startDate}T23:59:59.999Z`)
+        };
       }
 
-      if (!results && status) {
-        results = await this._payment
-          .find({ status })
-          .populate('doctorId')
-          .limit(limit)
-          .skip(offset)
-          .exec();
+      if (paymentDate) {
+        filters['paymentDate'] = {
+          $gte: new Date(`${paymentDate}T00:00:00.000Z`),
+          $lte: new Date(`${paymentDate}T23:59:59.999Z`)
+        }
       }
 
-      if (!results) throw new NotFoundException('Could not found payments');
-      return results;
+      if (doctorName) {
+        const queryInstance = new FindDoctorDto();
+        queryInstance.name = doctorName;
+
+        const doctors = await this._doctorService.getAllByPagination(queryInstance);
+        const doctorIds = doctors.data.map((doctor) => doctor._id.toString());
+
+        filters['doctorId'] = { $in: doctorIds };
+      }
+
+      return await this._payment
+        .find(filters)
+        .limit(limit)
+        .skip(offset)
+        .exec();
     } catch (error) {
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
       else throw error;

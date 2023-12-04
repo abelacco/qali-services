@@ -1,4 +1,4 @@
-import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsDateString, IsNumber, IsOptional, IsString } from 'class-validator';
 import { PaginationDto } from 'src/common/dto';
 
 export class FilterPaymentDto {
@@ -23,6 +23,11 @@ export class FilterPaymentsDto extends PaginationDto {
   @IsOptional()
   @IsString()
   endDate?: string;
+
+  @IsOptional()
+  @IsString()
+  @IsDateString()
+  paymentDate?: string;
 
   @IsOptional()
   @IsString()

@@ -19,9 +19,7 @@ import { Payment } from './entities/payment.entity';
 import { IPaymentDao } from './db/paymentDao';
 import {
   calculatePaymentFee,
-  CalculateDoctorsAppointments,
   CalculateDate,
-  transformIntoPayment,
 } from './utils/helper/';
 import { DoctorService } from 'src/doctor/doctor.service';
 
@@ -141,14 +139,6 @@ export class PaymentService {
 
   async filterBy(filterPaymentDto: FilterPaymentsDto) {
     try {
-      if (filterPaymentDto.doctorName) {
-        const findDoctor = await this._doctorService.getByName(
-          filterPaymentDto.doctorName,
-        );
-        return await this._db.filterBy({
-          doctorId: findDoctor._id,
-        });
-      }
       return await this._db.filterBy(filterPaymentDto);
     } catch (error) {
       throw error;
