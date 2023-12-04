@@ -8,6 +8,9 @@ import { mongoExceptionHandler } from 'src/common/mongoExceptionHandler';
 import { MongoDbService } from './db/mongodb.service';
 import { IPatientDao } from './db/patientDao';
 import { findCreatePatientDto } from './dto';
+import { FilterPatientDto } from './dto/filter-patient.dto';
+import { Pagination } from 'src/common/models/pagination';
+import { FindOnePatientDto } from './dto/find-one-patient.dto';
 
 @Injectable()
 export class PatientService {
@@ -37,9 +40,27 @@ export class PatientService {
     }
   }
 
-  async getById(id: string): Promise<Patient> {
+  async filterMany(query: FilterPatientDto): Promise<Pagination<Patient>> {
     try {
-      const patient = await this._db.findById(id);
+      return this._db.filterMany(query);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async genOneById(id: string): Promise<Patient> {
+    try {
+      const patient = await this._db.findOneById(id);
+      if (!patient) throw new NotFoundException('Patient not found');
+      return patient;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getOneByParam(param: FindOnePatientDto): Promise<Patient> {
+    try {
+      const patient = await this._db.findOneByParam(param);
       if (!patient) throw new NotFoundException('Patient not found');
       return patient;
     } catch (error) {

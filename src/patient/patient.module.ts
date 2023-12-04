@@ -11,6 +11,6 @@ import { MongoDbService } from './db/mongodb.service';
   ],
   controllers: [PatientController],
   providers: [PatientService, MongoDbService],
-  exports: [MongooseModule],
+  exports: [MongooseModule, PatientService],
 })
 export class PatientModule {}

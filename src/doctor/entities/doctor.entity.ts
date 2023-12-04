@@ -45,7 +45,13 @@ export class Doctor extends Document {
   @Prop({
     type: [Number],
   })
-  modality: number[];;
+  modality: number[];
+
+  @ApiProperty()
+  @Prop({
+    type: Number,
+  })
+  qaliComission: number;
 
   // @ApiProperty()
   // @Prop({

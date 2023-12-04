@@ -19,9 +19,7 @@ import { Payment } from './entities/payment.entity';
 import { IPaymentDao } from './db/paymentDao';
 import {
   calculatePaymentFee,
-  CalculateDoctorsAppointments,
   CalculateDate,
-  transformIntoPayment,
 } from './utils/helper/';
 import { DoctorService } from 'src/doctor/doctor.service';
 
@@ -68,17 +66,16 @@ export class PaymentService {
   }
 
   async createOne(createPaymentDto: CreateOnePaymentDto) {
-    console.log('Iniciando Consolidacion');
-
-
     try {
+      const doctor = await this._doctorService.getById(createPaymentDto.doctorId);
       const calculateDates = CalculateDate(createPaymentDto.date);
-      const calculatedFees = calculatePaymentFee(
-        createPaymentDto.transactionBeforeFee,
-      );
+      const calculatedFees = calculatePaymentFee({
+        total: createPaymentDto.transactionBeforeFee,
+        comission: createPaymentDto.doctorId.qaliComission
+      });
       const finalPaymentObj: CreatePaymentDto = {
         appointmentQ: createPaymentDto.appointmentQ,
-        doctorId: createPaymentDto.doctorId._id, // Convert doctorId to string
+        doctorId: createPaymentDto.doctorId,
         transactionBeforeFee: createPaymentDto.transactionBeforeFee,
         startDate: calculateDates.startDate,
         endDate: calculateDates.endDate,
@@ -86,7 +83,7 @@ export class PaymentService {
         doctorEarnings: calculatedFees.doctorEarnings,
         qaliFee: calculatedFees.qaliFee,
       };
-      console.log('crear o actualizar consolidado inicio');
+
       return await this._db.createOnePayment(finalPaymentObj);
     } catch (error) {
       throw error;
@@ -141,14 +138,6 @@ export class PaymentService {
 
   async filterBy(filterPaymentDto: FilterPaymentsDto) {
     try {
-      if (filterPaymentDto.doctorName) {
-        const findDoctor = await this._doctorService.getByName(
-          filterPaymentDto.doctorName,
-        );
-        return await this._db.filterBy({
-          doctorId: findDoctor._id,
-        });
-      }
       return await this._db.filterBy(filterPaymentDto);
     } catch (error) {
       throw error;

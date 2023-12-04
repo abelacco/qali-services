@@ -1,27 +1,31 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, NotImplementedException } from '@nestjs/common';
 import { IPaymentDao } from './paymentDao';
 import { InjectModel } from '@nestjs/mongoose';
 import { Payment } from '../entities/payment.entity';
 import { Model, mongo } from 'mongoose';
 import { PaginationDto } from 'src/common/dto';
 import { mongoExceptionHandler } from 'src/common/mongoExceptionHandler';
-import { CodeTransactionDto, CreatePaymentDto } from '../dto';
+import { CodeTransactionDto, CreatePaymentDto, FilterPaymentsDto } from '../dto';
 import { PaymentStatus } from 'src/common/constants';
 import { CalculateDate } from '../utils/helper';
 import { IFilterPaymentDb } from '../interfaces';
+import { FindDoctorDto } from 'src/doctor/dto';
+import { DoctorService } from 'src/doctor/doctor.service';
 
 @Injectable()
 export class MongoDbService implements IPaymentDao {
   constructor(
     @InjectModel(Payment.name)
     private readonly _payment: Model<Payment>,
+    private readonly _doctorService: DoctorService
   ) {}
 
   async createOnePayment(createPayment: CreatePaymentDto): Promise<Payment> {
     try {
-      const validatePayment = await this.validateCreateOne(createPayment);
-      if (!validatePayment) return await this._payment.create(createPayment);
-      else return;
+      const paymentExists = await this.validateCreateOne(createPayment);
+      if (paymentExists) return paymentExists;
+
+      return await this._payment.create(createPayment);
     } catch (error) {
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
       else throw error;
@@ -64,55 +68,52 @@ export class MongoDbService implements IPaymentDao {
     }
   }
 
-  async filterBy(filterPaymentData: IFilterPaymentDb): Promise<Payment[]> {
+  async filterBy(query: FilterPaymentsDto): Promise<Payment[]> {
     try {
       const {
+        doctorName,
         startDate,
-        endDate,
-        doctorId,
+        paymentDate,
         status,
-        limit = 0,
+        limit = 10,
         offset = 0,
-      } = filterPaymentData;
-      let results: Payment[];
+      } = query;
 
-      if (startDate && endDate) {
-        results = await this._payment
-          .find({
-            startDate: { $gte: startDate },
-            endDate: { $lte: endDate },
-          })
-          .populate('doctorId')
-          .limit(limit)
-          .skip(offset)
-          .exec();
+      let filters: any = {};
+
+      if (status !== null && status !== undefined) {
+        filters['status'] = status;
       }
 
-      // const thisWeek = CalculateDate(new Date().toISOString());
-      if (!results && doctorId) {
-        results = await this._payment
-          .find({
-            doctorId,
-            // startDate: { $gte: thisWeek.startDate },
-            // endDate: { $lte: thisWeek.endDate },
-          })
-          .populate('doctorId')
-          .limit(limit)
-          .skip(offset)
-          .exec();
+      if (startDate) {
+        filters['startDate'] = {
+          $gte: new Date(`${startDate}T00:00:00.000Z`),
+          $lte: new Date(`${startDate}T23:59:59.999Z`)
+        };
       }
 
-      if (!results && status) {
-        results = await this._payment
-          .find({ status })
-          .populate('doctorId')
-          .limit(limit)
-          .skip(offset)
-          .exec();
+      if (paymentDate) {
+        filters['paymentDate'] = {
+          $gte: new Date(`${paymentDate}T00:00:00.000Z`),
+          $lte: new Date(`${paymentDate}T23:59:59.999Z`)
+        }
       }
 
-      if (!results) throw new NotFoundException('Could not found payments');
-      return results;
+      if (doctorName) {
+        const queryInstance = new FindDoctorDto();
+        queryInstance.name = doctorName;
+
+        const doctors = await this._doctorService.getAllByPagination(queryInstance);
+        const doctorIds = doctors.data.map((doctor) => doctor._id.toString());
+
+        filters['doctorId'] = { $in: doctorIds };
+      }
+
+      return await this._payment
+        .find(filters)
+        .limit(limit)
+        .skip(offset)
+        .exec();
     } catch (error) {
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
       else throw error;
@@ -206,36 +207,48 @@ export class MongoDbService implements IPaymentDao {
   //     else throw error;
   //   }
   // }
-  private async validateCreateOne(
-    consolidate: CreatePaymentDto,
-  ): Promise<boolean> {
-    try {
 
-      const findPayment = await this._payment.findOne({
+  public async findOneByDateRangeAndDoctorId({ startDate, endDate, doctorId }: { startDate: Date, endDate: Date, doctorId: string }) {
+    try {
+      const payment = await this._payment.findOne({
+        startDate,
+        endDate,
+        doctorId
+      });
+
+      return payment;
+    } catch (error) {
+      if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
+      else throw error;
+    }
+  }
+
+  private async validateCreateOne(consolidate: CreatePaymentDto): Promise<Payment> {
+    try {
+      // const startDateTimestamp = new Date(consolidate.startDate).getTime();
+      // const endDateTimestamp = new Date(consolidate.endDate).getTime();
+
+      const payment = await this.findOneByDateRangeAndDoctorId({
         startDate: consolidate.startDate,
         endDate: consolidate.endDate,
-        doctorId: consolidate.doctorId,
+        doctorId: consolidate.doctorId
       });
-      console.log("findPayment", findPayment)
-      if (findPayment) {
-        // Encontró un pago existente, lo actualiza
-        const appointmentQtotal = findPayment.appointmentQ + consolidate.appointmentQ
-        const doctorEarningstotal = consolidate.doctorEarnings*appointmentQtotal
-        const qaliFeeTotal = consolidate.qaliFee*appointmentQtotal
-        console.log("si encontre")
-          await findPayment.updateOne({
-            appointmentQ: findPayment.appointmentQ + consolidate.appointmentQ,
-            doctorEarnings: doctorEarningstotal,
-            qaliFee: qaliFeeTotal,
-        });
-        // No necesita crear uno nuevo, ya existe y se actualizó si fue necesario
-        return true;
-      } else {
-        // No encontró un pago existente, puede proceder a crear uno nuevo
-        // Aquí deberías agregar la lógica para crear un nuevo pago
-        // Por ejemplo: await this._payment.create(consolidate);
-        return false; // O devolver false si la creación no es parte de esta función
-      }
+
+      if (!payment) return null;
+
+      const paymentUpdated = await payment.updateOne({
+        appointmentQ: payment.appointmentQ + consolidate.appointmentQ,
+        doctorEarnings: payment.doctorEarnings + consolidate.doctorEarnings,
+        qaliFee: payment.qaliFee + consolidate.qaliFee
+      });
+
+      if (paymentUpdated.modifiedCount === 0) throw new NotImplementedException('Ocurrio un error al actualizar el registro del payment, intentalo de nuevo');
+
+      return await this.findOneByDateRangeAndDoctorId({
+        startDate: payment.startDate,
+        endDate: payment.endDate,
+        doctorId: payment.doctorId
+      });
     } catch (error) {
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
       else throw error;
