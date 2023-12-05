@@ -79,7 +79,7 @@ export class PaymentService {
       });
       const finalPaymentObj: CreatePaymentDto = {
         appointmentQ: createPaymentDto.appointmentQ,
-        doctorId: createPaymentDto.doctorId._id, // Convert doctorId to string
+        doctorId: createPaymentDto.doctorId.id, // Convert doctorId to string
         transactionBeforeFee: createPaymentDto.transactionBeforeFee,
         startDate: calculateDates.startDate,
         endDate: calculateDates.endDate,
