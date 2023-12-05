@@ -53,12 +53,6 @@ export class Doctor extends Document {
   })
   qaliComission: number;
 
-  // @ApiProperty()
-  // @Prop({
-  //   type: String,
-  //   ref: 'Hunter',
-  // })
-  // hunter: string; ;
 }
 
 export const DoctorSchema = SchemaFactory.createForClass(Doctor);
