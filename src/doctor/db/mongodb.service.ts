@@ -48,6 +48,7 @@ export class MongoDbService implements IDoctorDao {
 
 
       const results = await this._doctorModel.find(QUERY);
+
       return results;
     } catch (error) {
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);

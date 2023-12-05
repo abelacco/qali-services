@@ -21,7 +21,7 @@ import {
   calculatePaymentFee,
   CalculateDoctorsAppointments,
   CalculateDate,
-  // transformIntoPayment,
+  transformIntoPayment,
 } from './utils/helper/';
 import { DoctorService } from 'src/doctor/doctor.service';
 
@@ -73,10 +73,9 @@ export class PaymentService {
 
     try {
       const calculateDates = CalculateDate(createPaymentDto.date);
-      const calculatedFees = calculatePaymentFee({
-        total: createPaymentDto.transactionBeforeFee,
-        comission: createPaymentDto.doctorId.qaliComission
-      });
+      const calculatedFees = calculatePaymentFee(
+        createPaymentDto.transactionBeforeFee,
+      );
       const finalPaymentObj: CreatePaymentDto = {
         appointmentQ: createPaymentDto.appointmentQ,
         doctorId: createPaymentDto.doctorId.id, // Convert doctorId to string
