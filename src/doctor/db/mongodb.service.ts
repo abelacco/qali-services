@@ -46,7 +46,6 @@ export class MongoDbService implements IDoctorDao {
         QUERY["modality"] = props.modality;
       }
 
-      console.log("compare", props, QUERY)
 
       const results = await this._doctorModel.find(QUERY);
       return results;
