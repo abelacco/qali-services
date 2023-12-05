@@ -22,6 +22,6 @@ export class FindDoctorDto extends PaginationDto {
   @ApiProperty()
   @IsNumber()
   @IsOptional()
-  modality: string;
+  modality: number;
 
 }
