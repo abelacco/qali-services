@@ -3,10 +3,11 @@ import {  v2 as cloudinary } from 'cloudinary';
 import { CloudinaryResponse } from './cloudinary-response';
 const streamifier = require('streamifier');
 import axios from 'axios';
-
+import Jimp from 'jimp';
 @Injectable()
 
 export class CloudinaryService {
+  private readonly MAX_SIZE = 10485760;
 
   async uploadFromURL(imageUrl: string): Promise<CloudinaryResponse> {
     const whatsAppToken = process.env.CURRENT_ACCESS_TOKEN;
@@ -20,6 +21,7 @@ export class CloudinaryService {
 
   // Puedes mantener tu método 'uploadFile' si todavía lo necesitas
   async uploadFile(file: Express.Multer.File): Promise<CloudinaryResponse> {
+    this.compressImageIfNeeded(file);
     return this.uploadToCloudinary(file.buffer);
   }
 
@@ -41,6 +43,16 @@ export class CloudinaryService {
     });
   }
 
+  async compressImageIfNeeded(file: Express.Multer.File): Promise<Buffer> {
+    if (file.size > this.MAX_SIZE) {
+      const image = await Jimp.read(file.buffer);
+      await image.resize(1024, Jimp.AUTO) // Ajusta el tamaño según necesidad
+             .quality(80); // Ajusta la calidad
 
+      return await image.getBufferAsync(Jimp.MIME_JPEG);
+    } else {
+      return file.buffer;
+    }
+  }
 
 }
