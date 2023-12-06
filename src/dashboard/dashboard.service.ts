@@ -53,16 +53,18 @@ export class DashboardService {
   }
 
   countMessagesByStep(messages: GetMessageDto[]) {
+    let totalMessages = 0;
     const stepCounts = messages.reduce((acc, message) => {
-      const step = message.step;
-      if (acc[step]) {
-          acc[step]++;
-      } else {
-          acc[step] = 1;
-      }
-      return acc;
-  }, {});
+        const step = message.step;
+        if (acc[step]) {
+            acc[step]++;
+        } else {
+            acc[step] = 1;
+        }
+        totalMessages++;
+        return acc;
+    }, {});
 
-  return stepCounts;
-  }
+    return { stepCounts, totalMessages };
+}
 }
