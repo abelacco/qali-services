@@ -16,10 +16,10 @@ export class NotificationService {
 
   async confirmPayment(createNotificationDto: CreateNotificationDto) {
     const wspServicesUrl = this.configService.get<string>(
-      'WSP_SERVICES_DEPLOY',
+      'WSP_SERVICES_BACKEND',
     );
     const response = await axios.post(
-      `${wspServicesUrl}/paymentStatus`,
+      `${wspServicesUrl}/wsp/paymentStatus`,
       createNotificationDto,
     );
     const findAppointment = await this._appointmentService.getById(
