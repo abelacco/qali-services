@@ -27,33 +27,28 @@ export class MongoDbService implements IDoctorDao {
   }
 
   async findAll(props?: FindDoctorDto): Promise<Array<Doctor>> {
-    // try {
-    //   // Construir el objeto de consulta
-    //   const query = {};
-    //   if (findDoctorDto.phone) {
-    //     query['phone'] = { $regex: findDoctorDto.phone, $options: 'i' }; // Búsqueda insensible a mayúsculas/minúsculas
-    //   }
-    //   if (findDoctorDto.name) {
-    //     query['name'] = { $regex: findDoctorDto.name, $options: 'i' }; // Búsqueda insensible a mayúsculas/minúsculas
-    //   }
-  
-    //   // Aplicar paginación
-    //   const limit = findDoctorDto.limit || 10; // Valor por defecto si no se proporciona
-    //   const offset = findDoctorDto.offset || 0;
-  
-    //   // Realizar la consulta con filtros y paginación
-    //   const data = await this._doctorModel.find(query).limit(limit).skip(offset);
-  
-    //   // Obtener el conteo total de documentos que coinciden con los criterios de búsqueda
-    //   const total = await this._doctorModel.countDocuments(query);
-  
-    //   return new Pagination<Doctor>(data, total, offset, limit);
-    // } catch (error) {
-    //   if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
-    //   else throw error;
-    // }
+
     try {
-      const results = await this._doctorModel.find(props);
+      const QUERY = {};
+
+      if(props.name) {
+        QUERY["name"] = { $regex: props.name, $options: 'i' };
+      }
+
+      if(props.phone) {
+        QUERY["phone"] = props.phone;
+      }
+
+      if(props.speciality) {
+        QUERY["speciality"] = { $regex: props.speciality, $options: 'i' };
+      }
+      if(!isNaN(props.modality)) {
+        QUERY["modality"] = props.modality;
+      }
+
+      console.log("compare", props, QUERY)
+
+      const results = await this._doctorModel.find(QUERY);
       return results;
     } catch (error) {
       if (error instanceof mongo.MongoError) mongoExceptionHandler(error);
