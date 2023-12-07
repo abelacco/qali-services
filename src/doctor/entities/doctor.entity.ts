@@ -45,20 +45,8 @@ export class Doctor extends Document {
   @Prop({
     type: [Number],
   })
-  modality: number[];
+  modality: number[];;
 
-  @ApiProperty()
-  @Prop({
-    type: Number,
-  })
-  qaliComission: number;
-
-  // @ApiProperty()
-  // @Prop({
-  //   type: String,
-  //   ref: 'Hunter',
-  // })
-  // hunter: string; ;
 }
 
 export const DoctorSchema = SchemaFactory.createForClass(Doctor);
