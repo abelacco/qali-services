@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsArray, IsIn, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsArray, IsBoolean, IsIn, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 import { MODALITY } from "src/common/constants";
 
 export class CreateDoctorDto {
@@ -44,4 +44,9 @@ export class CreateDoctorDto {
   @IsOptional()
   @IsNumber()
   qaliComission?: number;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
 }
