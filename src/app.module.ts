@@ -16,6 +16,7 @@ import { ApiPeruModule } from './api-peru/api-peru.module';
 import { PaymentModule } from './payment/payment.module';
 import { CulquiModule } from './culqui/culqui.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { CartModule } from './cart/cart.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
     PaymentModule,
     CulquiModule,
     DashboardModule,
+    CartModule,
   ],
   providers: [AppService],
 })

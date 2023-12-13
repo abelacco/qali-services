@@ -45,7 +45,14 @@ export class Doctor extends Document {
   @Prop({
     type: [Number],
   })
-  modality: number[];;
+  modality: number[];
+
+  @ApiProperty()
+  @Prop({
+    type: Boolean,
+    default: false,
+  })
+  isActive: boolean
 
 }
 
